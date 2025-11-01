@@ -18,12 +18,17 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import dao.DatVeDAO;
+import dao.PhimDAO;
+import dao.PhongDAO;
+
 public class MenuChinh extends JFrame{
 	// Components
     private JMenuBar menuBar;
     private JPanel mainPanel;
     
     public MenuChinh() {
+    	mainPanel = new JPanel();
         initComponents();
         setLocationRelativeTo(null);
     }
@@ -39,13 +44,12 @@ public class MenuChinh extends JFrame{
         createMenuBar();
         
         // Tạo Main Panel
-        mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setLayout(new BorderLayout());
         mainPanel.setBackground(new Color(240, 240, 240));
         
         // Welcome panel
-        JPanel welcomePanel = createWelcomePanel();
-        mainPanel.add(welcomePanel, BorderLayout.CENTER);
-        
+        mainPanel.add(createWelcomePanel());
+
         add(mainPanel, BorderLayout.CENTER);
         
         // Status bar
@@ -86,7 +90,7 @@ public class MenuChinh extends JFrame{
         // ========== MENU CỦA ĐẠT ==========
         JMenu menuVe = new JMenu("🎟️ Quản lý Vé");
         JMenuItem itemDatVe = new JMenuItem("Đặt vé");
-        itemDatVe.addActionListener(e -> showNotImplemented("Đặt vé - Module của Đạt"));
+        itemDatVe.addActionListener(e -> openDatVeGUI());
         menuVe.add(itemDatVe);
         
         JMenuItem itemHoaDon = new JMenuItem("Hóa đơn");
@@ -176,6 +180,21 @@ public class MenuChinh extends JFrame{
     private void openLichChieuGUI() {
         // TODO: Tuần 3 - Tạo LichChieuGUI
         showNotImplemented("LichChieuGUI - Đang phát triển (Tuần 3)");
+    }
+    private void openDatVeGUI() {
+    	DatVeDAO datve = new DatVeDAO();
+	    PhongDAO phong = new PhongDAO();
+	    PhimDAO phim = new PhimDAO();
+	    datve.connectDatabase();
+	    phong.connectDatabase();
+	    phim.connectDatabase();
+	    mainPanel.removeAll();
+	    mainPanel.add(new DatVeGUI(datve, phong, phim));
+	    
+	    // cập nhật lại giao diện
+	    mainPanel.revalidate();
+	    mainPanel.repaint();
+		
     }
     
     private void logout() {

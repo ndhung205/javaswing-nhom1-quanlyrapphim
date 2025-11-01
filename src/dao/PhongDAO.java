@@ -1,77 +1,62 @@
 package dao;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
+import connectDB.DatabaseConnection;
 import entity.LoaiPhong;
 import entity.Phong;
 
 public class PhongDAO {
-	private ArrayList<Phong> listPhong;
-	private Connection con;
 	
-	
-	
-	public PhongDAO() {
-		listPhong = new ArrayList<Phong>();
-	}
-	
-	public void connectDatabase() {
-		try {
-			con = null;
-			String url = "jdbc:sqlserver://localhost:1433;databasename=QuanLyRapChieuPhim";
-			String user = "sa";
-			String pass ="sapassword";
+	public List<Phong> getAll() {
+		List<Phong> list = new ArrayList<Phong>();
+		String sql = "SELECT p.maPhong, p.tenPhong, p.soLuongGhe, p.maLoaiPhong, lp.tenLoaiPhong, p.trangThai " +
+					"FROM Phong p " +
+					"JOIN LoaiPhong lp ON p.maLoaiPhong = lp.maLoaiPhong " +
+					"ORDER BY tenPhong";
+		
+		try (Connection conn = DatabaseConnection.getInstance().getConnection();
+				PreparedStatement stmt = conn.prepareStatement(sql)){
 			
-			con =  DriverManager.getConnection(url, user, pass);
+			ResultSet rs = stmt.executeQuery();
 			
-			Statement stm = con.createStatement();
-			String sql = "SELECT * FROM Phong LEFT JOIN LoaiPhong ON LoaiPhong.maLoaiPhong = Phong.maLoaiPhong";
-			
-			ResultSet rs = stm.executeQuery(sql);
-			
-			while(rs.next()) {
-				String maPhong = rs.getString("maPhong");
-				String tenPhong = rs.getString("tenPhong");
-				int soluongGhe = rs.getInt("soLuongGhe");
-				LoaiPhong lp = new LoaiPhong(rs.getString("maLoaiPhong"), rs.getString("tenLoaiPhong"), rs.getString("moTa"));
-				Phong p = new Phong(maPhong, tenPhong, soluongGhe, lp, (rs.getBoolean("trangThai")));
+			while (rs.next()) {
+				LoaiPhong loaiPhong = new LoaiPhong(rs.getString("maLoaiPhong"), rs.getString("tenLoaiPhong"), " ");
 				
-				listPhong.add(p);
+				Phong phong = new Phong(rs.getString("maPhong"), rs.getString("tenPhong"), rs.getInt("soLuongGhe"), loaiPhong, rs.getBoolean("trangThai"));
+				
+				list.add(phong);
 			}
-			System.out.println("Phong kết nối SQL thành công.");
-			con.close();
-			
 			
 		} catch (Exception e) {
-			System.out.println("Phong kết nối SQL thất bại. Vui lòng kiểm tra kết nối.");
+			// TODO: handle exception
 			e.printStackTrace();
+			System.err.println("Loi khi doc data db");
 		}
+		
+		return list;
 	}
 	
-	
-	public boolean addPhong() {
-		return true;
-	}
-	
-	
-	public boolean removePhong() {
-		return true;
-	}
-	
-	public boolean updatePhong() {
-		return true;
+	public int getSize() {
+		return getAll().size();
 	}
 	
 	public Phong findPhongByIndex(int index) {
-		return listPhong.get(index);
+		return getAll().get(index);
 	}
-	public int getSize() {
-		return listPhong.size();
+	
+	public static void main(String[] args) {
+		PhongDAO phongDAO = new PhongDAO();
+		List<Phong> list = phongDAO.getAll();
+		for (Phong phong : list) {
+			System.out.println(phong);
+		}
+		
+		
 	}
-
 	
 }

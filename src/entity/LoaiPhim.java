@@ -23,8 +23,8 @@ public class LoaiPhim {
     public String getMoTa() { return moTa; }
     public void setMoTa(String moTa) { this.moTa = moTa; }
 
-    @Override
-    public String toString() {
-        return tenLoaiPhim; // Để hiển thị trong ComboBox
-    }
+	@Override
+	public String toString() {
+		return "LoaiPhim [maLoaiPhim=" + maLoaiPhim + ", tenLoaiPhim=" + tenLoaiPhim + ", moTa=" + moTa + "]";
+	}
 }

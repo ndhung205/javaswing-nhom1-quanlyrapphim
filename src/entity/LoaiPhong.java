@@ -22,8 +22,8 @@ public class LoaiPhong {
     public String getMoTa() { return moTa; }
     public void setMoTa(String moTa) { this.moTa = moTa; }
 
-    @Override
-    public String toString() {
-        return tenLoaiPhong;
-    }
+	@Override
+	public String toString() {
+		return "LoaiPhong [maLoaiPhong=" + maLoaiPhong + ", tenLoaiPhong=" + tenLoaiPhong + ", moTa=" + moTa + "]";
+	}
 }

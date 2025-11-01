@@ -35,7 +35,7 @@ public class MenuChinh extends JFrame{
     
     private void initComponents() {
         // Cấu hình JFrame
-        setTitle("Quản lý Rạp Chiếu Phim - Menu Chính");
+        setTitle("Quản lý Rạp Chiếu Phim");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1200, 700);
         setLayout(new BorderLayout());
@@ -159,12 +159,22 @@ public class MenuChinh extends JFrame{
     
     private void openPhimGUI() {
         // TODO: Tuần 2 - Tạo PhimGUI
-        showNotImplemented("PhimGUI - Đang phát triển (Tuần 2)");
+	    mainPanel.removeAll();
+	    mainPanel.add(new PhimGUI());
+	    
+	    // cập nhật lại giao diện
+	    mainPanel.revalidate();
+	    mainPanel.repaint();
     }
     
     private void openPhongGUI() {
         // TODO: Tuần 2 - Tạo PhongGUI
-        showNotImplemented("PhongGUI - Đang phát triển (Tuần 2)");
+    	mainPanel.removeAll();
+	    mainPanel.add(new PhongGUI());
+	    
+	    // cập nhật lại giao diện
+	    mainPanel.revalidate();
+	    mainPanel.repaint();
     }
     
     private void openGheGUI() {
@@ -179,15 +189,18 @@ public class MenuChinh extends JFrame{
     
     private void openLichChieuGUI() {
         // TODO: Tuần 3 - Tạo LichChieuGUI
-        showNotImplemented("LichChieuGUI - Đang phát triển (Tuần 3)");
+    	mainPanel.removeAll();
+	    mainPanel.add(new LichChieuGUI());
+	    
+	    // cập nhật lại giao diện
+	    mainPanel.revalidate();
+	    mainPanel.repaint();
     }
     private void openDatVeGUI() {
     	DatVeDAO datve = new DatVeDAO();
 	    PhongDAO phong = new PhongDAO();
 	    PhimDAO phim = new PhimDAO();
 	    datve.connectDatabase();
-	    phong.connectDatabase();
-	    phim.connectDatabase();
 	    mainPanel.removeAll();
 	    mainPanel.add(new DatVeGUI(datve, phong, phim));
 	    

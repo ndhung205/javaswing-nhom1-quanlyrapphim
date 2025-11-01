@@ -39,8 +39,9 @@ public class Phim {
     public int getNamPhatHanh() { return namPhatHanh; }
     public void setNamPhatHanh(int namPhatHanh) { this.namPhatHanh = namPhatHanh; }
 
-    @Override
-    public String toString() {
-        return tenPhim;
-    }
+	@Override
+	public String toString() {
+		return "Phim [maPhim=" + maPhim + ", tenPhim=" + tenPhim + ", loaiPhim=" + loaiPhim + ", moTa=" + moTa
+				+ ", thoiLuongChieu=" + thoiLuongChieu + ", namPhatHanh=" + namPhatHanh + "]";
+	}
 }

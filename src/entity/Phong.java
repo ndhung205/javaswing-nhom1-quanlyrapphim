@@ -33,8 +33,11 @@ public class Phong {
     public boolean isTrangThai() { return trangThai; }
     public void setTrangThai(boolean trangThai) { this.trangThai = trangThai; }
 
-    @Override
-    public String toString() {
-        return tenPhong;
-    }
+	@Override
+	public String toString() {
+		return "Phong [maPhong=" + maPhong + ", tenPhong=" + tenPhong + ", soLuongGhe=" + soLuongGhe + ", loaiPhong="
+				+ loaiPhong + ", trangThai=" + trangThai + "]";
+	}
+
+    
 }

@@ -192,8 +192,6 @@ public class DatVeGUI extends JPanel implements ActionListener{
 	    PhongDAO phong = new PhongDAO();
 	    PhimDAO phim = new PhimDAO();
 	    datve.connectDatabase();
-	    phong.connectDatabase();
-	    phim.connectDatabase();
 	    new DatVeGUI(datve, phong, phim);
 		
 	}

@@ -1,77 +1,86 @@
 package dao;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
-
+import java.util.List;
 import connectDB.DatabaseConnection;
 import entity.DatVe;
-import entity.Ve;
 
 public class DatVeDAO {
-	private ArrayList<DatVe> listDatVe;
-	private Connection con;
-	
-	
-	
-	public DatVeDAO() {
-		listDatVe = new ArrayList<DatVe>();
-	}
-	
-	public void connectDatabase() {
-		try {
-			con = null;
-			String url = "jdbc:sqlserver://localhost:1433;databasename=QuanLyRapChieuPhim";
-			String user = "sa";
-			String pass ="sapassword";
-			
-			con =  DriverManager.getConnection(url, user, pass);
-			
-			Statement stm = con.createStatement();
-			String sql = "Select * from DatVe";
-			ResultSet rs = stm.executeQuery(sql);
-			
-			while(rs.next()) {
-				
-			}
-			
-			con.close();
-			
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	public boolean addDatVe(DatVe dv) {
-		con = DatabaseConnection.getInstance().getConnection();
-		PreparedStatement stmt = null;
-		int n =0;
-		try {
-			stmt = con.prepareStatement("INSERT INTO DatVe VALUES (?,?,?,?,?)");
-			stmt.setString(1, dv.getMaDatVe());
-			stmt.setString(2, null);
-			stmt.setString(3, dv.getNgayDat().toLocaleString());
-			stmt.setString(4, dv.getTrangThai());
-			stmt.setString(5, null);
-			
-			n = stmt.executeUpdate();
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		return n>0;
-	}
-	
-	
-	public boolean removeDatVe() {
-		return true;
-	}
-	
-	public boolean updateDatVe() {
-		return true;
-	}
-	
+
+    public ArrayList<DatVe> getAllDatVe() {
+        ArrayList<DatVe> list = new ArrayList<>();
+        String sql = "SELECT * FROM DatVe";
+
+        try (Connection con = DatabaseConnection.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) { 
+                DatVe dv = new DatVe(rs.getString("maDatVe"), rs.getString("trangThai"), rs.getTimestamp("ngayDat").toLocalDateTime());
+                list.add(dv);
+            }
+            System.out.println("K");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public boolean addDatVe(DatVe dv) {
+        String sql = "INSERT INTO DatVe (maDatVe, ngayDat, trangThai) VALUES (?, ?, ?)";
+        int n = 0;
+
+        try (Connection con = DatabaseConnection.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+
+            stmt.setString(1, dv.getMaDatVe());
+            stmt.setTimestamp(2, Timestamp.valueOf(dv.getNgayDat()));
+            stmt.setString(3, dv.getTrangThai());
+
+            n = stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return n > 0;
+    }
+
+    public boolean updateDatVe(DatVe dv) {
+        String sql = "UPDATE DatVe SET trangThai = ? WHERE maDatVe = ?";
+        int n = 0;
+
+        try (Connection con = DatabaseConnection.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+
+            stmt.setString(1, dv.getTrangThai());
+            stmt.setString(2, dv.getMaDatVe());
+
+            n = stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return n > 0;
+    }
+
+    public boolean removeDatVe(String maDatVe) {
+        String sql = "DELETE FROM DatVe WHERE maDatVe = ?";
+        int n = 0;
+
+        try (Connection con = DatabaseConnection.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+
+            stmt.setString(1, maDatVe);
+            n = stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return n > 0;
+    }
 }

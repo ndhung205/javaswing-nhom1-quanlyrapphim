@@ -1,15 +1,14 @@
 package entity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class DatVe {
 	private String maDatVe;
 	private String trangThai;
-	private Date ngayDat;
+	private LocalDateTime ngayDat;
 	
-	public DatVe() {
-	}
-	public DatVe(String maDatVe, String trangThai, Date ngayDat) {
+
+	public DatVe(String maDatVe, String trangThai, LocalDateTime ngayDat) {
 		super();
 		this.maDatVe = maDatVe;
 		this.trangThai = trangThai;
@@ -21,10 +20,10 @@ public class DatVe {
 	public void setTrangThai(String trangThai) {
 		this.trangThai = trangThai;
 	}
-	public Date getNgayDat() {
+	public LocalDateTime getNgayDat() {
 		return ngayDat;
 	}
-	public void setNgayDat(Date ngayDat) {
+	public void setNgayDat(LocalDateTime ngayDat) {
 		this.ngayDat = ngayDat;
 	}
 	public String getMaDatVe() {

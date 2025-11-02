@@ -3,6 +3,7 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +49,46 @@ public class PhongDAO {
 	public Phong findPhongByIndex(int index) {
 		return getAll().get(index);
 	}
-	
+	public Phong findPhongByMa(String maPhong) {
+        Phong phong = null;
+
+        String sql = """
+            SELECT p.maPhong, p.tenPhong, p.soLuongGhe, p.trangThai,
+                   lp.maLoaiPhong, lp.tenLoaiPhong, lp.moTa
+            FROM Phong p
+            LEFT JOIN LoaiPhong lp ON lp.maLoaiPhong = p.maLoaiPhong
+            WHERE p.maPhong = ?
+        """;
+
+        try (Connection con = DatabaseConnection.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+
+            stmt.setString(1, maPhong);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    LoaiPhong loaiPhong = new LoaiPhong(
+                        rs.getString("maLoaiPhong"),
+                        rs.getString("tenLoaiPhong"),
+                        rs.getString("moTa")
+                    );
+
+                    phong = new Phong(
+                        rs.getString("maPhong"),
+                        rs.getString("tenPhong"),
+                        rs.getInt("soLuongGhe"),
+                        loaiPhong,
+                        rs.getBoolean("trangThai")
+                    );
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("Lỗi lấy danh sách phim trong db");
+        }
+
+        return phong;
+    }
 	public static void main(String[] args) {
 		PhongDAO phongDAO = new PhongDAO();
 		List<Phong> list = phongDAO.getAll();

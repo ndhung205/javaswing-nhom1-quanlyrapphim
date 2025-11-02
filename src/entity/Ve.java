@@ -1,19 +1,19 @@
 package entity;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 public class Ve {
 	private String maVe;
 	private double gia;
 	private LichChieu lichChieu;
 	private Ghe ghe;
-	private Date thoiGianDat;
+	private LocalDateTime thoiGianDat;
 	
 
 	public Ve() {}
 
 
-	public Ve(String maVe, double gia, LichChieu lichChieu, Ghe ghe, Date thoiGianDat) {
+	public Ve(String maVe, double gia, LichChieu lichChieu, Ghe ghe, LocalDateTime thoiGianDat) {
 		super();
 		this.maVe = maVe;
 		this.gia = gia;
@@ -53,12 +53,12 @@ public class Ve {
 	}
 
 
-	public Date getThoiGianDat() {
+	public LocalDateTime getThoiGianDat() {
 		return thoiGianDat;
 	}
 
 
-	public void setThoiGianDat(Date thoiGianDat) {
+	public void setThoiGianDat(LocalDateTime thoiGianDat) {
 		this.thoiGianDat = thoiGianDat;
 	}
 

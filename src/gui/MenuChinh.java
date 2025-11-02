@@ -197,12 +197,8 @@ public class MenuChinh extends JFrame{
 	    mainPanel.repaint();
     }
     private void openDatVeGUI() {
-    	DatVeDAO datve = new DatVeDAO();
-	    PhongDAO phong = new PhongDAO();
-	    PhimDAO phim = new PhimDAO();
-	    datve.connectDatabase();
 	    mainPanel.removeAll();
-	    mainPanel.add(new DatVeGUI(datve, phong, phim));
+	    mainPanel.add(new DatVeGUI());
 	    
 	    // cập nhật lại giao diện
 	    mainPanel.revalidate();

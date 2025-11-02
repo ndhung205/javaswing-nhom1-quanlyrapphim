@@ -282,7 +282,7 @@ public class DatVeGUI extends JPanel implements ActionListener{
 	}
 	
 	private String[] getDanhSachTenPhong() {
-		ArrayList<Phong> listP = phong.getAllPhong();
+		List<Phong> listP = phong.getAll();
 		String[] phongItems = new String[listP.size()+1];
 		phongItems[0] = "----------------------------- Phòng ------------------------------------";
 		for(int i=0; i<listP.size(); i++) {
@@ -329,3 +329,4 @@ public class DatVeGUI extends JPanel implements ActionListener{
 
 	
 }
+

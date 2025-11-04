@@ -10,16 +10,17 @@ import java.util.List;
 import connectDB.DatabaseConnection;
 import entity.LoaiPhim;
 import entity.Phim;
-import main.RapPhimApp;
 
 public class PhimDAO {
 
 	public List<Phim> getAll() {
 		List<Phim> list = new ArrayList<Phim>();
-		String sql = "SELECT p.maPhim, p.tenPhim, p.moTa, p.thoiLuongChieu, p.namPhatHanh, p.maLoaiPhim, lp.tenLoaiPhim " +
-					"FROM Phim p " +
-					"JOIN LoaiPhim lp ON p.maLoaiPhim = lp.maLoaiPhim "+
-					"ORDER BY p.tenPhim";
+		String sql = "SELECT p.maPhim, p.tenPhim, p.maLoaiPhim, p.moTa, p.thoiLuongChieu, "
+		           + "p.namPhatHanh, p.path, lp.tenLoaiPhim "
+		           + "FROM Phim p "
+		           + "JOIN LoaiPhim lp ON p.maLoaiPhim = lp.maLoaiPhim "
+		           + "ORDER BY p.tenPhim";
+
 		
 		try (Connection conn = DatabaseConnection.getInstance().getConnection();
 				PreparedStatement stmt = conn.prepareStatement(sql);
@@ -28,7 +29,7 @@ public class PhimDAO {
 			while (rs.next()) {
 				LoaiPhim loaiPhim = new LoaiPhim(rs.getString("maLoaiPhim"), rs.getString("tenLoaiPhim"), " ");
 				
-				Phim phim = new Phim(rs.getString("maPhim"), rs.getString("tenPhim"), loaiPhim, rs.getString("moTa"), rs.getInt("thoiLuongChieu"), rs.getInt("namPhatHanh"));
+				Phim phim = new Phim(rs.getString("maPhim"), rs.getString("tenPhim"), loaiPhim, rs.getString("moTa"), rs.getInt("thoiLuongChieu"), rs.getInt("namPhatHanh"), rs.getString("path"));
 				
 				list.add(phim);
 			}
@@ -57,7 +58,7 @@ public class PhimDAO {
 			while (rs.next()) {
 				LoaiPhim loaiPhim = new LoaiPhim(rs.getString("maLoaiPhim"), rs.getString("tenLoaiPhim"), " ");		
 				
-				Phim phim = new Phim(rs.getString("maPhim"), rs.getString("tenPhim"), loaiPhim, rs.getString("moTa"), rs.getInt("thoiLuongChieu"), rs.getInt("namPhatHanh"));
+				Phim phim = new Phim(rs.getString("maPhim"), rs.getString("tenPhim"), loaiPhim, rs.getString("moTa"), rs.getInt("thoiLuongChieu"), rs.getInt("namPhatHanh"), rs.getString("path"));
 				
 				return phim;
 			}
@@ -182,7 +183,7 @@ public class PhimDAO {
 		PhimDAO phimDAO = new PhimDAO();
 		List<Phim> phims =  phimDAO.getAll();
 		for (Phim phim : phims) {
-			System.out.println(phim);
+			System.out.println(phim.getPath());
 		}
 		
 	}

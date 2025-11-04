@@ -7,20 +7,30 @@ public class Phim {
     private String moTa;
     private int thoiLuongChieu; // phút
     private int namPhatHanh;
+    private String path;
 
     public Phim() {}
 
     public Phim(String maPhim, String tenPhim, LoaiPhim loaiPhim, 
-                String moTa, int thoiLuongChieu, int namPhatHanh) {
+                String moTa, int thoiLuongChieu, int namPhatHanh, String path) {
         this.maPhim = maPhim;
         this.tenPhim = tenPhim;
         this.loaiPhim = loaiPhim;
         this.moTa = moTa;
         this.thoiLuongChieu = thoiLuongChieu;
         this.namPhatHanh = namPhatHanh;
+        this.path = path;
     }
 
-    // Getters & Setters
+    public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	// Getters & Setters
     public String getMaPhim() { return maPhim; }
     public void setMaPhim(String maPhim) { this.maPhim = maPhim; }
     
@@ -39,9 +49,8 @@ public class Phim {
     public int getNamPhatHanh() { return namPhatHanh; }
     public void setNamPhatHanh(int namPhatHanh) { this.namPhatHanh = namPhatHanh; }
 
-	@Override
-	public String toString() {
-		return "Phim [maPhim=" + maPhim + ", tenPhim=" + tenPhim + ", loaiPhim=" + loaiPhim + ", moTa=" + moTa
-				+ ", thoiLuongChieu=" + thoiLuongChieu + ", namPhatHanh=" + namPhatHanh + "]";
-	}
+    @Override
+    public String toString() {
+        return tenPhim;
+    }
 }

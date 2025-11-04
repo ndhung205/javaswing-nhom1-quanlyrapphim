@@ -13,17 +13,13 @@ INSERT INTO LoaiPhong VALUES
 ('LP09', N'Phòng Standard', N'Tiêu chuẩn phổ thông'),
 ('LP10', N'Phòng Classic', N'Phong cách truyền thống');
 
-INSERT INTO LoaiPhim VALUES
-('LPh01', N'Hành động', N'Phim có nhiều cảnh đánh nhau, cháy nổ'),
-('LPh02', N'Hài hước', N'Phim giải trí, tạo tiếng cười'),
-('LPh03', N'Tình cảm', N'Phim về tình yêu, cảm xúc'),
-('LPh04', N'Kinh dị', N'Phim gây sợ hãi, hồi hộp'),
-('LPh05', N'Phiêu lưu', N'Khám phá, hành trình mạo hiểm'),
-('LPh06', N'Tâm lý', N'Phim khai thác nội tâm nhân vật'),
-('LPh07', N'Hoạt hình', N'Dành cho trẻ em và gia đình'),
-('LPh08', N'Khoa học viễn tưởng', N'Tương lai, vũ trụ, công nghệ'),
-('LPh09', N'Hình sự', N'Tội phạm, điều tra, phá án'),
-('LPh10', N'Lịch sử', N'Phim dựa trên sự kiện thật');
+INSERT INTO LoaiPhim (maLoaiPhim, tenLoaiPhim) VALUES
+('LPh001', N'Hành động'),
+('LPh002', N'Hài hước'),
+('LPh003', N'Kinh dị'),
+('LPh004', N'Tâm lý'),
+('LPh005', N'Phiêu lưu'),
+('LPh006', N'Hoạt hình');
 
 INSERT INTO LoaiGhe VALUES
 ('LG01', N'Thường', 0, N'Ghế tiêu chuẩn'),
@@ -88,17 +84,37 @@ INSERT INTO KhuyenMai VALUES
 ('KM10', N'Black Friday', 30.00, 0, '2025-11-20', '2025-11-30', N'Tất cả phim', 1);
 
 
-INSERT INTO Phim VALUES
-('PH01', N'Avengers: Endgame', 'LPh01', N'Siêu anh hùng chống Thanos', 180, 2019),
-('PH02', N'Frozen 2', 'LPh07', N'Nữ hoàng băng giá phần 2', 120, 2019),
-('PH03', N'Spider-Man: No Way Home', 'LPh08', N'Người Nhện đa vũ trụ', 150, 2021),
-('PH04', N'Titanic', 'LPh03', N'Chuyện tình trên biển', 195, 1997),
-('PH05', N'Conjuring 3', 'LPh04', N'Phim kinh dị siêu nhiên', 140, 2021),
-('PH06', N'Minions', 'LPh07', N'Những sinh vật nhỏ màu vàng', 95, 2015),
-('PH07', N'Inception', 'LPh08', N'Giấc mơ trong giấc mơ', 160, 2010),
-('PH08', N'John Wick 4', 'LPh01', N'Sát thủ báo thù', 170, 2023),
-('PH09', N'Joker', 'LPh06', N'Tâm lý xã hội', 155, 2019),
-('PH10', N'Avatar 2', 'LPh08', N'Cuộc chiến ở Pandora', 190, 2022);
+INSERT INTO Phim(maPhim, tenPhim, maLoaiPhim, thoiLuongChieu, namPhatHanh, path) VALUES
+('PH001', N'Người Hùng Thời Tận Thế', 'LPh001', N'Sau một trận bão mặt trời tàn phá Trái Đất, nhân loại rơi vào hỗn loạn. Một thợ săn kho báu liều lĩnh lên đường tìm Mona Lisa nhưng trở thành người hùng của nhân loại.', 105, 2025, N'img/poster/Nguoi_Hung_Thoi_Tan_The.jpg'),
+('PH002', N'Cuộc Chiến Giữa Các Thế Giới', 'LPh005', N'Một chuyên gia an ninh mạng phát hiện chính phủ che giấu một thực thể bí ẩn từ thế giới khác.', 91, 2025, N'img/poster/Cuoc_Chien_Giua_Cac_The_Gioi.jpg'),
+('PH003', N'Culpa Nuestra', 'LPh004', N'Câu chuyện tình cảm phức tạp giữa Noah và Nick khi định mệnh đưa họ gặp lại sau nhiều năm chia tay.', 112, 2025, N'img/poster/Culpa_Nuestra.jpg'),
+('PH004', N'Marvels: Secret Wars', 'LPh001', N'Các siêu anh hùng Marvel hợp lực để ngăn chặn đa vũ trụ sụp đổ trong trận chiến cuối cùng.', 135, 2025, N'img/poster/Marvels_Secret_Wars.jpg'),
+('PH005', N'Inside Out 2', 'LPh006', N'Riley bước vào tuổi dậy thì với những cảm xúc mới đầy hỗn loạn và bất ngờ.', 95, 2024, N'img/poster/Inside_Out_2.jpg'),
+('PH006', N'Nhà Bà Nữ 2', 'LPh002', N'Tiếp nối thành công phần đầu, câu chuyện hài hước nhưng cảm động về gia đình bà Nữ.', 120, 2025, N'img/poster/Nha_Ba_Nu_2.jpg'),
+('PH007', N'The Batman: Rebirth', 'LPh001', N'Batman tái sinh trong một Gotham hỗn loạn sau khi Joker trốn thoát khỏi Arkham.', 140, 2025, N'img/poster/The_Batman_Rebirth.jpg'),
+('PH008', N'Frozen 3', 'LPh006', N'Anna và Elsa bắt đầu chuyến phiêu lưu mới khi một bí mật về nguồn gốc băng giá được tiết lộ.', 102, 2026, N'img/poster/Frozen_3.jpg'),
+('PH009', N'Mất Tích Ở Đà Lạt', 'LPh003', N'Một nhóm bạn trẻ mất tích bí ẩn trong rừng thông Đà Lạt, nơi tồn tại truyền thuyết rùng rợn.', 98, 2025, N'img/poster/Mat_Tich_o_Da_Lat.jpg'),
+('PH010', N'The Lion King Reborn', 'LPh006', N'Câu chuyện kinh điển được làm lại với công nghệ CGI chân thực và âm nhạc mới.', 118, 2024, N'img/poster/The_Lion_King_Reborn.jpg'),
+('PH011', N'Thanh Xuân Rực Rỡ', 'LPh004', N'Một cô gái tỉnh lẻ lên thành phố theo đuổi ước mơ ca hát và tìm thấy tình yêu.', 107, 2024, N'img/poster/Thanh_Xuan_Ruc_Ro.jpg'),
+('PH012', N'Avengers: Legacy', 'LPh001', N'Đội Avengers thế hệ mới xuất hiện để bảo vệ Trái Đất khỏi mối đe dọa vũ trụ.', 150, 2026, N'img/poster/Avengers_Legacy.jpg'),
+('PH013', N'Nhà Không Bán', 'LPh003', N'Câu chuyện kinh dị Việt Nam về một ngôi nhà ma ám và lời nguyền gia tộc.', 102, 2022, N'img/poster/Nha_Khong_Ban.jpg'),
+('PH014', N'Sonic 3', 'LPh005', N'Sonic cùng bạn bè đối đầu kẻ thù mới từ không gian, mở ra cuộc phiêu lưu tốc độ cao.', 115, 2025, N'img/poster/Sonic_3.jpg'),
+('PH015', N'Titanic 2', 'LPh004', N'Một chuyến tàu xa hoa mới được xây dựng, nhưng lịch sử có lặp lại?', 125, '2025', N'img/poster/Titanic_2.jpg'),
+('PH016', N'Spider-Man: Beyond Time', 'LPh001', N'Spiderman du hành qua các chiều không gian để ngăn chặn sự sụp đổ đa vũ trụ.', 130, 2026, N'img/poster/SpiderMan_Beyond_Time.jpg'),
+('PH017', N'Hài Kịch Cuộc Đời', 'LPh002', N'Một chàng diễn viên hài thất bại tìm thấy cơ hội thứ hai khi bước lên sân khấu cuộc đời.', 90, 2024, N'img/poster/Hai_Kich_Cuoc_Doi.jpg'),
+('PH018', N'Avatar: The Seed', 'LPh005', N'Một thế hệ mới của người Na’vi bắt đầu hành trình bảo vệ hành tinh Pandora.', 155, 2026, N'img/poster/Avatar_The_Seed.jpg'),
+('PH019', N'IT: Legacy', 'LPh003', N'Thị trấn Derry lại chìm trong ác mộng khi nỗi sợ cũ sống lại cùng thế hệ mới.', 128, 2025, N'img/poster/IT_Legacy.jpg'),
+('PH020', N'Bay Cùng Yêu Thương', 'LPh004', N'Một tiếp viên hàng không tìm thấy ý nghĩa cuộc sống qua những hành khách đặc biệt.', 101, 2024, N'img/poster/Bay_Cung_Yeu_Thuong.jpg'),
+('PH021', N'Bad Boys 5', 'LPh001', N'Hai cảnh sát già tiếp tục phá án trong phi vụ cuối cùng trước khi nghỉ hưu.', 122, 2025, N'img/poster/Bad_Boys_5.jpg'),
+('PH022', N'Kung Fu Panda 4', 'LPh006', N'Po quay lại với sứ mệnh đào tạo Thần Long chiến binh kế tiếp.', 98, 2024, N'img/poster/KungFu_Panda_4.jpg'),
+('PH023', N'Trò Chơi Sinh Tồn', 'LPh003', N'Một nhóm người bị nhốt trong trò chơi thực tế ảo mà sinh mạng là cái giá phải trả.', 115, 2025, N'img/poster/Tro_Choi_Sinh_Ton.jpg'),
+('PH024', N'Ngày Mai Bình Yên', 'LPh004', N'Câu chuyện về lòng nhân ái và sự tha thứ giữa những con người tổn thương.', 100, 2023, N'img/poster/Ngay_Mai_Binh_Yen.jpg'),
+('PH025', N'Fast & Furious 11', 'LPh001', N'Dominic Toretto cùng đội của anh đối đầu kẻ thù nguy hiểm nhất từ trước đến nay.', 145, 2025, N'img/poster/Fast_Furious_11.jpg'),
+('PH026', N'Vùng Đất Câm Lặng 3', 'LPh003', N'Tiếp tục câu chuyện sinh tồn trong thế giới bị thống trị bởi quái vật âm thanh.', 108, 2024, N'img/poster/Vung_Dat_Cam_Lang_3.jpg'),
+('PH027', N'Hành Trình Kỳ Diệu', 'LPh005', N'Một cậu bé cùng chú chó máy khám phá thế giới kỳ diệu bên ngoài Trái Đất.', 110, 2024, N'img/poster/Hanh_Trinh_Ky_Dieu.jpg'),
+('PH028', N'Minions: Rise Again', 'LPh006', N'Các Minion tiếp tục hành trình nghịch ngợm với ông chủ Gru thời trẻ.', 89, 2024, N'img/poster/Minions_Rise_Again.jpg'),
+('PH029', N'Lật Mặt 7: Cú Lừa', 'LPh002', N'Một bộ phim Việt đầy kịch tính xen lẫn hài hước của Lý Hải.', 123, 2025, N'img/poster/Lat_Mat_7_Cu_Lua.jpg'),
+('PH030', N'Godzilla x Kong: The New Empire', 'LPh001', N'Hai quái thú huyền thoại hợp lực đối đầu mối đe dọa từ lòng đất.', 138, 2024, N'img/poster/Godzilla_x_Kong_The_New_Empire.jpg');
 
 INSERT INTO LichChieu VALUES
 ('LC01', 'PH01', 'P01', '2025-10-27', '2025-10-27 09:00:00', '2025-10-27 12:00:00'),
@@ -137,17 +153,58 @@ INSERT INTO Ve VALUES
 ('V09', 'LC06', 'G09', 100000, N'Đã đặt', '2025-10-25 10:10:00'),
 ('V10', 'LC07', 'G10', 120000, N'Trống', '2025-10-25 10:15:00');
 
-INSERT INTO KhachHang VALUES
-('KH01', N'Nguyễn Văn A', '0901111111'),
-('KH02', N'Trần Thị B', '0902222222'),
-('KH03', N'Lê Văn C', '0903333333'),
-('KH04', N'Phạm Thị D', '0904444444'),
-('KH05', N'Hoàng Văn E', '0905555555'),
-('KH06', N'Vũ Thị F', '0906666666'),
-('KH07', N'Ngô Văn G', '0907777777'),
-('KH08', N'Đặng Thị H', '0908888888'),
-('KH09', N'Bùi Văn I', '0909999999'),
-('KH10', N'Đỗ Thị K', '0910000000');
+INSERT INTO KhachHang (maKhachHang, ten, soDienThoai) VALUES
+('KH001', N'Nguyễn Minh Anh', '0905123456'),
+('KH002', N'Trần Thị Thu Hà', '0938234567'),
+('KH003', N'Lê Hoàng Long', '0974123456'),
+('KH004', N'Phạm Thị Ngọc Hân', '0906765432'),
+('KH005', N'Hoàng Đức Trung', '0398456123'),
+('KH006', N'Vũ Thị Mai Hương', '0707123987'),
+('KH007', N'Ngô Quang Huy', '0939789456'),
+('KH008', N'Đặng Thị Thanh Tâm', '0378456129'),
+('KH009', N'Bùi Anh Tuấn', '0909345678'),
+('KH010', N'Đỗ Thị Kim Ngân', '0798456789'),
+('KH011', N'Phan Văn Dũng', '0907213456'),
+('KH012', N'Tạ Thị Mỹ Linh', '0379564821'),
+('KH013', N'Lý Hoàng Nam', '0937632589'),
+('KH014', N'Đinh Thị Thùy Dung', '0909347852'),
+('KH015', N'Nguyễn Thanh Tùng', '0978456132'),
+('KH016', N'Phạm Thị Minh Ngọc', '0399845671'),
+('KH017', N'Võ Hữu Nghĩa', '0908456321'),
+('KH018', N'Trịnh Thị Cẩm Tiên', '0797345896'),
+('KH019', N'Trương Văn Kiệt', '0939567412'),
+('KH020', N'Cao Thị Diễm Quỳnh', '0379845126'),
+('KH021', N'Nguyễn Văn Phúc', '0908457123'),
+('KH022', N'Lê Thị Mai Anh', '0978456123'),
+('KH023', N'Trần Quốc Bảo', '0907345689'),
+('KH024', N'Phan Thị Hồng Nhung', '0399345678'),
+('KH025', N'Bùi Văn Hòa', '0798456234'),
+('KH026', N'Đặng Thị Hồng Hạnh', '0938456321'),
+('KH027', N'Nguyễn Đình Khải', '0909567123'),
+('KH028', N'Trần Thị Huyền Trang', '0379845632'),
+('KH029', N'Lê Quốc Khánh', '0707123984'),
+('KH030', N'Phạm Ngọc Bích', '0907345981'),
+('KH031', N'Nguyễn Thanh Bình', '0939345678'),
+('KH032', N'Vũ Thị Lan Anh', '0978234561'),
+('KH033', N'Ngô Minh Hòa', '0909345782'),
+('KH034', N'Đỗ Thị Bảo Yến', '0378456791'),
+('KH035', N'Trần Văn Lực', '0398456213'),
+('KH036', N'Lê Thị Thu Trang', '0939456321'),
+('KH037', N'Phan Hữu Tài', '0909456231'),
+('KH038', N'Đinh Thị Mai', '0797345892'),
+('KH039', N'Nguyễn Hồng Phúc', '0379845134'),
+('KH040', N'Cao Thị Hồng Gấm', '0908456734'),
+('KH041', N'Vũ Hoàng Nam', '0939567456'),
+('KH042', N'Nguyễn Thị Thu Thảo', '0978456124'),
+('KH043', N'Trương Đình Hậu', '0708234569'),
+('KH044', N'Phạm Thị Bảo Trân', '0909123789'),
+('KH045', N'Lê Đức Hiếu', '0938456987'),
+('KH046', N'Tạ Thị Hồng Vân', '0399345612'),
+('KH047', N'Nguyễn Thanh Huyền', '0378456219'),
+('KH048', N'Bùi Minh Quân', '0907123459'),
+('KH049', N'Trần Thị Phương Linh', '0978456234'),
+('KH050', N'Phan Anh Tuấn', '0937345890');
+
 
 INSERT INTO NhanVien VALUES
 ('NV01', N'Nguyễn Minh Quân', '0981111111', 'quan@cinema.vn', 'CV01', '2022-01-05'),

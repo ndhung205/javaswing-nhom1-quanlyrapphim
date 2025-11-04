@@ -19,7 +19,6 @@ CREATE TABLE LoaiPhong (
 CREATE TABLE LoaiPhim (
     maLoaiPhim NVARCHAR(50) PRIMARY KEY,
     tenLoaiPhim NVARCHAR(100) NOT NULL,
-    moTa NVARCHAR(255)
 );
 
 -- Bảng Loại ghế
@@ -86,6 +85,7 @@ CREATE TABLE Phim (
     moTa NVARCHAR(MAX),
     thoiLuongChieu INT NOT NULL, -- phút
     namPhatHanh INT,
+	path NVARCHAR(200),
     CONSTRAINT FK_Phim_LoaiPhim FOREIGN KEY (maLoaiPhim)
         REFERENCES LoaiPhim(maLoaiPhim)
         ON DELETE NO ACTION ON UPDATE CASCADE
@@ -243,73 +243,4 @@ CREATE TABLE ChiTietHoaDon (
         ON DELETE NO ACTION ON UPDATE CASCADE
 );
 
-
-USE QuanLyRapChieuPhim;
-GO
-
--- ===============================
--- 1️⃣ BẢNG LOẠI / TRA CỨU
--- ===============================
-
--- Loại phòng
-INSERT INTO LoaiPhong VALUES
-('LP01', N'2D Standard', N'Phòng chiếu 2D tiêu chuẩn'),
-('LP02', N'3D Standard', N'Phòng chiếu 3D hiện đại'),
-('LP03', N'4DX', N'Ghế chuyển động, hiệu ứng đặc biệt'),
-('LP04', N'IMAX', N'Màn hình cong kích thước lớn'),
-('LP05', N'VIP', N'Phòng cao cấp với ghế sang trọng');
-
--- Loại phim
-INSERT INTO LoaiPhim VALUES
-('P01', N'Hành động', N'Nhiều pha rượt đuổi, đánh nhau'),
-('P02', N'Tình cảm', N'Lãng mạn, cảm xúc'),
-('P03', N'Hài', N'Giải trí, gây cười'),
-('P04', N'Kinh dị', N'Gây sợ hãi, hồi hộp'),
-('P05', N'Hoạt hình', N'Dành cho trẻ em');
-
--- Loại ghế
-INSERT INTO LoaiGhe VALUES
-('G01', N'Thường', 0, N'Ghế phổ thông'),
-('G02', N'VIP', 30000, N'Ghế cao cấp'),
-('G03', N'Đôi', 50000, N'Ghế sweetbox cho 2 người'),
-('G04', N'4DX', 70000, N'Ghế chuyển động'),
-('G05', N'IMAX', 60000, N'Ghế cho phòng IMAX');
-
--- Chức vụ
-INSERT INTO ChucVu VALUES
-('CV01', N'Quản lý', N'Giám sát toàn rạp'),
-('CV02', N'Nhân viên bán vé', N'Bán và quản lý vé'),
-('CV03', N'Nhân viên phục vụ', N'Hỗ trợ khách hàng'),
-('CV04', N'Nhân viên kỹ thuật', N'Vận hành thiết bị chiếu'),
-('CV05', N'Thu ngân', N'Thanh toán và lập hóa đơn');
-
--- Phương thức thanh toán
-INSERT INTO PhuongThucThanhToan VALUES
-('TT01', N'Tiền mặt', N'Thanh toán trực tiếp'),
-('TT02', N'Chuyển khoản', N'Qua tài khoản ngân hàng'),
-('TT03', N'Thẻ tín dụng', N'Sử dụng Visa/MasterCard'),
-('TT04', N'Momo', N'Ví điện tử Momo'),
-('TT05', N'ZaloPay', N'Thanh toán online');
-
--- Thuế
-INSERT INTO Thue VALUES
-('TH01', N'Thuế VAT 5%', 5.00, N'Áp dụng cho phim phổ thông'),
-('TH02', N'Thuế VAT 8%', 8.00, N'Áp dụng cho phim 3D/4DX'),
-('TH03', N'Thuế VAT 10%', 10.00, N'Áp dụng cho vé cao cấp'),
-('TH04', N'Thuế ưu đãi', 2.00, N'Chương trình giảm đặc biệt'),
-('TH05', N'Thuế dịch vụ', 3.00, N'Dịch vụ ngoài vé');
-
--- Khuyến mãi
-INSERT INTO KhuyenMai VALUES
-('KM01', N'Giảm 10% cuối tuần', 10, 0, '2025-10-01', '2025-12-31', N'Áp dụng thứ 7, CN', 1),
-('KM02', N'Combo vé + nước', 0, 30000, '2025-09-01', '2025-12-31', N'Mua vé kèm nước', 1),
-('KM03', N'Giảm sinh viên', 15, 0, '2025-01-01', '2025-12-31', N'Xuất trình thẻ SV', 1),
-('KM04', N'Member VIP', 20, 0, '2025-05-01', '2025-12-31', N'Khách hàng thân thiết', 1),
-('KM05', N'Morning Sale', 0, 20000, '2025-06-01', '2025-12-31', N'Suất chiếu trước 10h sáng', 1);\
-
-INSERT INTO Phim VALUES
-('PM01', N'Avengers: Endgame', 'P01', N'Siêu anh hùng Marvel', 180, 2019),
-('PM02', N'Titanic', 'P02', N'Chuyện tình kinh điển', 195, 1997),
-('PM03', N'Minions 2', 'P05', N'Hoạt hình vui nhộn', 90, 2022),
-('PM04', N'IT Chapter 2', 'P04', N'Kinh dị, máu me', 165, 2019)
 

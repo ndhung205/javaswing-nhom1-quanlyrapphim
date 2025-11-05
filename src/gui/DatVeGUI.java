@@ -326,7 +326,7 @@ public class DatVeGUI extends JPanel implements ActionListener{
 			lblNamXB.setText(String.valueOf(p.getNamPhatHanh()));
 			lblThoiLuong.setText(String.valueOf(p.getThoiLuongChieu() + " phút"));
 			
-			// Sửa chỗ này để hiện poster phim
+			
 			icon = new ImageIcon(new ImageIcon(p.getPoster()).getImage().getScaledInstance(300, 300, java.awt.Image.SCALE_SMOOTH));
 			lblPosterPhim.setIcon(icon);
 			

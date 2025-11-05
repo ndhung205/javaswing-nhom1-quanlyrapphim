@@ -25,6 +25,6 @@ public class LoaiPhim {
 
 	@Override
 	public String toString() {
-		return "LoaiPhim [maLoaiPhim=" + maLoaiPhim + ", tenLoaiPhim=" + tenLoaiPhim + ", moTa=" + moTa + "]";
+		return tenLoaiPhim + " (" + maLoaiPhim + ")";
 	}
 }

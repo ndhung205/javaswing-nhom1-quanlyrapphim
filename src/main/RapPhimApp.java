@@ -37,11 +37,6 @@ public class RapPhimApp {
 
         } catch (SQLException e) {
             System.err.println("❌ Không thể kết nối database!");
-            System.err.println("Vui lòng kiểm tra:");
-            System.err.println("1. SQL Server đã chạy chưa");
-            System.err.println("2. Database 'QuanLyRapChieuPhim' đã tạo chưa");
-            System.err.println("3. Username/Password trong DatabaseConnection.java");
-            System.err.println("\nLỗi chi tiết:");
             e.printStackTrace();
             System.exit(1);
         }

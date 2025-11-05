@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -78,6 +79,7 @@ public class DatVeGUI extends JPanel implements ActionListener{
 	private LichChieuDAO lichChieu;
 
 	private JLabel lblNamXB;
+	private ImageIcon icon;
 
 	
  	public DatVeGUI(){
@@ -182,7 +184,9 @@ public class DatVeGUI extends JPanel implements ActionListener{
 		pnlEast.setBorder(BorderFactory.createTitledBorder("THÔNG TIN PHIM"));
 		pnlEast.setPreferredSize(new Dimension(450, pnlEast.getHeight()));
 	
-		ImageIcon icon = new ImageIcon(new ImageIcon("img/doraemon.jpg").getImage().getScaledInstance(300, 300, java.awt.Image.SCALE_SMOOTH));
+		// Hùng sửa để hiện poster theo từng phim
+		//ImageIcon icon = new ImageIcon(new ImageIcon("img/doraemon.jpg").getImage().getScaledInstance(300, 300, java.awt.Image.SCALE_SMOOTH));
+		icon = new ImageIcon();
 		lblPosterPhim = new JLabel(icon);
 		lblPosterPhim.setPreferredSize(new Dimension(400, 300));
 		
@@ -321,6 +325,11 @@ public class DatVeGUI extends JPanel implements ActionListener{
 			lblMoTa.setText(p.getMoTa());
 			lblNamXB.setText(String.valueOf(p.getNamPhatHanh()));
 			lblThoiLuong.setText(String.valueOf(p.getThoiLuongChieu() + " phút"));
+			
+			// Sửa chỗ này để hiện poster phim
+			icon = new ImageIcon(new ImageIcon(p.getPoster()).getImage().getScaledInstance(300, 300, java.awt.Image.SCALE_SMOOTH));
+			lblPosterPhim.setIcon(icon);
+			
 		}else {
 			System.out.println("Không tìm thấy Phim");
 		}

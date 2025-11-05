@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import connectDB.DatabaseConnection;
 import entity.LoaiPhim;
@@ -16,10 +18,10 @@ public class PhimDAO {
 
 	public List<Phim> getAll() {
 		List<Phim> list = new ArrayList<Phim>();
-		String sql = "SELECT p.maPhim, p.tenPhim, p.moTa, p.thoiLuongChieu, p.namPhatHanh, p.maLoaiPhim, lp.tenLoaiPhim " +
+		String sql = "SELECT p.maPhim, p.tenPhim, p.moTa, p.thoiLuongChieu, p.namPhatHanh, p.poster, p.maLoaiPhim, lp.tenLoaiPhim " +
 					"FROM Phim p " +
 					"JOIN LoaiPhim lp ON p.maLoaiPhim = lp.maLoaiPhim "+
-					"ORDER BY p.tenPhim";
+					"ORDER BY p.maPhim";
 		
 		try (Connection conn = DatabaseConnection.getInstance().getConnection();
 				PreparedStatement stmt = conn.prepareStatement(sql);
@@ -28,7 +30,7 @@ public class PhimDAO {
 			while (rs.next()) {
 				LoaiPhim loaiPhim = new LoaiPhim(rs.getString("maLoaiPhim"), rs.getString("tenLoaiPhim"), " ");
 				
-				Phim phim = new Phim(rs.getString("maPhim"), rs.getString("tenPhim"), loaiPhim, rs.getString("moTa"), rs.getInt("thoiLuongChieu"), rs.getInt("namPhatHanh"));
+				Phim phim = new Phim(rs.getString("maPhim"), rs.getString("tenPhim"), loaiPhim, rs.getString("moTa"), rs.getInt("thoiLuongChieu"), rs.getInt("namPhatHanh"), rs.getString("poster"));
 				
 				list.add(phim);
 			}
@@ -43,7 +45,7 @@ public class PhimDAO {
 	}
 	
 	public Phim getById(String maPhim) {
-		String sql = "SELECT p.maPhim, p.tenPhim, p.moTa, p.thoiLuongChieu, p.namPhatHanh, p.maLoaiPhim, lp.tenLoaiPhim " +
+		String sql = "SELECT p.maPhim, p.tenPhim, p.moTa, p.thoiLuongChieu, p.namPhatHanh, p.maLoaiPhim, p.poster, lp.tenLoaiPhim " +
 				"FROM Phim p " +
 				"JOIN LoaiPhim lp ON p.maLoaiPhim = lp.maLoaiPhim "+
 				"WHERE maPhim = ?";
@@ -57,7 +59,7 @@ public class PhimDAO {
 			while (rs.next()) {
 				LoaiPhim loaiPhim = new LoaiPhim(rs.getString("maLoaiPhim"), rs.getString("tenLoaiPhim"), " ");		
 				
-				Phim phim = new Phim(rs.getString("maPhim"), rs.getString("tenPhim"), loaiPhim, rs.getString("moTa"), rs.getInt("thoiLuongChieu"), rs.getInt("namPhatHanh"));
+				Phim phim = new Phim(rs.getString("maPhim"), rs.getString("tenPhim"), loaiPhim, rs.getString("moTa"), rs.getInt("thoiLuongChieu"), rs.getInt("namPhatHanh"), rs.getString("poster"));
 				
 				return phim;
 			}
@@ -113,8 +115,8 @@ public class PhimDAO {
 			return false;
 		}
 		
-		String sqlInsert = "INSERT INTO Phim(maPhim, tenPhim, maLoaiPhim, moTa, thoiLuongChieu, namPhatHanh) " +
-					"VALUES(?,?,?,?,?,?)";
+		String sqlInsert = "INSERT INTO Phim(maPhim, tenPhim, maLoaiPhim, moTa, thoiLuongChieu, namPhatHanh, poster) " +
+					"VALUES(?,?,?,?,?,?,?)";
 		
 		try (Connection conn = DatabaseConnection.getInstance().getConnection();
 			PreparedStatement stmt = conn.prepareStatement(sqlInsert)){
@@ -125,6 +127,7 @@ public class PhimDAO {
 			stmt.setString(4, phim.getMoTa());
 			stmt.setInt(5, phim.getThoiLuongChieu());
 			stmt.setInt(6, phim.getNamPhatHanh());
+			stmt.setString(7, phim.getPoster());
 			
 			int n = stmt.executeUpdate();
             return n > 0;
@@ -137,7 +140,7 @@ public class PhimDAO {
 	}
 	
 	public boolean updatePhim(Phim phim) {
-		String sql = "UPDATE Phim SET tenPhim=?, maLoaiPhim=?, moTa=?, thoiLuongChieu=?, namPhatHanh=? "+
+		String sql = "UPDATE Phim SET tenPhim=?, maLoaiPhim=?, moTa=?, thoiLuongChieu=?, namPhatHanh=?, poster=? "+
 					"WHERE maPhim=?";
 		
 		try (Connection conn = DatabaseConnection.getInstance().getConnection();
@@ -147,7 +150,8 @@ public class PhimDAO {
 			stmt.setString(3, phim.getMoTa());
 			stmt.setInt(4, phim.getThoiLuongChieu());
 			stmt.setInt(5, phim.getNamPhatHanh());
-			stmt.setString(6, phim.getMaPhim());
+			stmt.setString(7, phim.getMaPhim());
+			stmt.setString(6, phim.getPoster());
 			
 			int n = stmt.executeUpdate();
 			return n > 0;
@@ -177,6 +181,156 @@ public class PhimDAO {
 			return false;
 		}
 	}
+	
+	/**
+     * Tìm kiếm phim theo tên
+     * @param keyword
+     * @return List<Phim>
+     */
+    public List<Phim> search(String keyword) {
+        List<Phim> list = new ArrayList<>();
+        String sql = "SELECT p.maPhim, p.tenPhim, p.moTa, p.thoiLuongChieu, p.namPhatHanh, p.poster" +
+                     "p.maLoaiPhim, lp.tenLoaiPhim, lp.moTa as moTaLoai " +
+                     "FROM Phim p " +
+                     "LEFT JOIN LoaiPhim lp ON p.maLoaiPhim = lp.maLoaiPhim " +
+                     "WHERE p.tenPhim LIKE ? OR p.moTa LIKE ? " +
+                     "ORDER BY p.tenPhim";
+        
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            String searchPattern = "%" + keyword + "%";
+            stmt.setString(1, searchPattern);
+            stmt.setString(2, searchPattern);
+            
+            ResultSet rs = stmt.executeQuery();
+            
+            while (rs.next()) {
+                LoaiPhim loaiPhim = new LoaiPhim(
+                    rs.getString("maLoaiPhim"),
+                    rs.getString("tenLoaiPhim"),
+                    rs.getString("moTaLoai")
+                );
+                
+                Phim phim = new Phim(
+                    rs.getString("maPhim"),
+                    rs.getString("tenPhim"),
+                    loaiPhim,
+                    rs.getString("moTa"),
+                    rs.getInt("thoiLuongChieu"),
+                    rs.getInt("namPhatHanh"),
+                    rs.getString("poster")
+                );
+                
+                list.add(phim);
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("❌ Lỗi khi tìm kiếm phim: " + e.getMessage());
+        }
+        
+        return list;
+    }
+    
+    public Set<Integer> getNamPhatHanh() {
+		Set<Integer> list = new HashSet<Integer>();
+		
+		String sql = "SELECT namPhatHanh FROM Phim ORDER BY namPhatHanh";
+		
+		try (Connection conn = DatabaseConnection.getInstance().getConnection();
+				PreparedStatement stmt = conn.prepareStatement(sql);
+				ResultSet rs = stmt.executeQuery()){
+			while (rs.next()) {
+				list.add(rs.getInt("namPhatHanh"));
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+    
+    public List<Phim> getByLoaiPhim(LoaiPhim loaiPhim) {
+        List<Phim> list = new ArrayList<>();
+
+        String sql = """
+            SELECT maPhim, tenPhim, moTa, thoiLuongChieu, namPhatHanh, poster
+            FROM Phim
+            WHERE maLoaiPhim = ?
+            ORDER BY maPhim
+        """;
+
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, loaiPhim.getMaLoaiPhim());
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Phim p = new Phim(
+                        rs.getString("maPhim"),
+                        rs.getString("tenPhim"),
+                        loaiPhim, // dùng luôn đối tượng đã truyền vào
+                        rs.getString("moTa"),
+                        rs.getInt("thoiLuongChieu"),
+                        rs.getInt("namPhatHanh"),
+                        rs.getString("poster")
+                    );
+
+                    list.add(p);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<Phim> getByNam(Integer nam) {
+        List<Phim> list = new ArrayList<>();
+
+        String sql = """
+            SELECT p.maPhim, p.tenPhim, p.moTa AS moTaPhim, 
+                   p.thoiLuongChieu, p.namPhatHanh, poster
+                   lp.maLoaiPhim, lp.tenLoaiPhim, lp.moTa AS moTaLoaiPhim
+            FROM Phim p
+            LEFT JOIN LoaiPhim lp ON p.maLoaiPhim = lp.maLoaiPhim
+            WHERE p.namPhatHanh = ?
+            ORDER BY p.maPhim
+        """;
+
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, nam);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    LoaiPhim lp = new LoaiPhim(
+                        rs.getString("maLoaiPhim"),
+                        rs.getString("tenLoaiPhim"),
+                        rs.getString("moTaLoaiPhim")
+                    );
+
+                    Phim p = new Phim(
+                        rs.getString("maPhim"),
+                        rs.getString("tenPhim"),
+                        lp,
+                        rs.getString("moTaPhim"),
+                        rs.getInt("thoiLuongChieu"),
+                        rs.getInt("namPhatHanh"),
+                        rs.getString("poster")
+                    );
+                    list.add(p);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 	
 	public static void main(String[] args) {
 		PhimDAO phimDAO = new PhimDAO();

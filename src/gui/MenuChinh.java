@@ -179,7 +179,12 @@ public class MenuChinh extends JFrame{
     
     private void openGheGUI() {
         // TODO: Tuần 2 - Tạo GheGUI
-        showNotImplemented("GheGUI - Đang phát triển (Tuần 2)");
+    	mainPanel.removeAll();
+	    mainPanel.add(new GheGUI());
+	    
+	    // cập nhật lại giao diện
+	    mainPanel.revalidate();
+	    mainPanel.repaint();
     }
     
     private void openSoDoGheGUI() {

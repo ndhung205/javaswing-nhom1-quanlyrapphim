@@ -313,3 +313,15 @@ INSERT INTO Phim VALUES
 ('PM03', N'Minions 2', 'P05', N'Hoạt hình vui nhộn', 90, 2022),
 ('PM04', N'IT Chapter 2', 'P04', N'Kinh dị, máu me', 165, 2019)
 
+INSERT INTO Phong VALUES
+('PH01', N'Phòng 1 - Tầng 1', 50, 'LP01', 1),
+('PH02', N'Phòng 2 - Tầng 1', 60, 'LP01', 1),
+('PH03', N'Phòng 3 - Tầng 2', 70, 'LP02', 1),
+('PH04', N'Phòng 4 - Tầng 2', 80, 'LP02', 1),
+('PH05', N'Phòng 5 - Tầng 3', 100, 'LP03', 1),
+('PH06', N'Phòng 6 - Tầng 3', 100, 'LP03', 1),
+('PH07', N'Phòng 7 - Tầng 4', 120, 'LP04', 1),
+('PH08', N'Phòng 8 - Tầng 4', 120, 'LP04', 1),
+('PH09', N'Phòng 9 - Tầng 5', 40, 'LP05', 1),
+('PH10', N'Phòng 10 - Tầng 5', 40, 'LP05', 1)
+

@@ -29,6 +29,6 @@ public class LoaiGhe {
 
     @Override
     public String toString() {
-        return tenLoaiGhe;
+        return tenLoaiGhe + " (" + maLoaiGhe + ") "  + phuThu; 
     }
 }

@@ -23,7 +23,7 @@ public class LichChieuDAO {
 
         String sql = """
             SELECT lc.maLichChieu, lc.ngayChieu, lc.gioBatDau, lc.gioKetThuc,
-                   p.maPhim, p.tenPhim, p.moTa, p.thoiLuongChieu, p.namPhatHanh,
+                   p.maPhim, p.tenPhim, p.moTa, p.thoiLuongChieu, p.namPhatHanh, p.poster, 
                    ph.maPhong, ph.tenPhong, ph.soLuongGhe, ph.trangThai
             FROM LichChieu lc
             JOIN Phim p ON p.maPhim = lc.maPhim
@@ -41,7 +41,8 @@ public class LichChieuDAO {
                     null,
                     rs.getString("moTa"),
                     rs.getInt("thoiLuongChieu"),
-                    rs.getInt("namPhatHanh")
+                    rs.getInt("namPhatHanh"),
+                    rs.getString("poster")
                 );
 
                 Phong phong = new Phong(

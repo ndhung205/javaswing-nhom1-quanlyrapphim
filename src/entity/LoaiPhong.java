@@ -24,6 +24,6 @@ public class LoaiPhong {
 
 	@Override
 	public String toString() {
-		return "LoaiPhong [maLoaiPhong=" + maLoaiPhong + ", tenLoaiPhong=" + tenLoaiPhong + ", moTa=" + moTa + "]";
+		return tenLoaiPhong + "(" + maLoaiPhong + ")";
 	}
 }

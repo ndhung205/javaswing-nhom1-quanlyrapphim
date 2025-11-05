@@ -1,7 +1,7 @@
 package main;
 
 import connectDB.DatabaseConnection;
-import gui.DangNhapGUI_Test;
+import gui.DangNhapGUI;
 
 import javax.swing.*;
 import java.sql.SQLException;
@@ -30,7 +30,7 @@ public class RapPhimApp {
                 // Chạy GUI trên Event Dispatch Thread
                 SwingUtilities.invokeLater(() -> {
                     // Mở form đăng nhập trước
-                    DangNhapGUI_Test loginGUI = new DangNhapGUI_Test();
+                    DangNhapGUI loginGUI = new DangNhapGUI();
                     loginGUI.setVisible(true);
                 });
             }

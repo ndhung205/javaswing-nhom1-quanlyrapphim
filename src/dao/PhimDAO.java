@@ -12,16 +12,17 @@ import java.util.Set;
 import connectDB.DatabaseConnection;
 import entity.LoaiPhim;
 import entity.Phim;
-import main.RapPhimApp;
 
 public class PhimDAO {
 
 	public List<Phim> getAll() {
 		List<Phim> list = new ArrayList<Phim>();
+		
 		String sql = "SELECT p.maPhim, p.tenPhim, p.moTa, p.thoiLuongChieu, p.namPhatHanh, p.poster, p.maLoaiPhim, lp.tenLoaiPhim " +
 					"FROM Phim p " +
 					"JOIN LoaiPhim lp ON p.maLoaiPhim = lp.maLoaiPhim "+
 					"ORDER BY p.maPhim";
+
 		
 		try (Connection conn = DatabaseConnection.getInstance().getConnection();
 				PreparedStatement stmt = conn.prepareStatement(sql);
@@ -332,12 +333,4 @@ public class PhimDAO {
         return list;
     }
 	
-	public static void main(String[] args) {
-		PhimDAO phimDAO = new PhimDAO();
-		List<Phim> phims =  phimDAO.getAll();
-		for (Phim phim : phims) {
-			System.out.println(phim);
-		}
-		
-	}
 }

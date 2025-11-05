@@ -16,21 +16,20 @@ import entity.Phong;
 public class ChonGheGUI extends JFrame implements ActionListener {
 
     // Lưu danh sách ghế
-	private PhongDAO phong;
 	private Phong room;
     private JButton[] danhSachGhe;
-    private Ghe ghe;
 	private JButton btnXacNhan;
 	private JButton btnHuy;
 	private GheDAO gheDao;
+	private PhongDAO phong;
 	private ArrayList<String> maGheChon;
 	private DatVeGUI parentFrame;
    
-    public ChonGheGUI(String maPhong,PhongDAO phong, GheDAO ghe, DatVeGUI parentFrame) {
-    	this.phong = phong;
+    public ChonGheGUI(String maPhong,DatVeGUI parentFrame) {
+    	this.phong = new PhongDAO();
     	this.room = phong.findPhongByMa(maPhong);
     	this.danhSachGhe = new JButton[room.getSoLuongGhe()];
-    	this.gheDao = ghe;
+    	this.gheDao = new GheDAO();
     	this.parentFrame = parentFrame;
     	
     	if(this.room == null) {

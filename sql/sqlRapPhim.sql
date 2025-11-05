@@ -19,7 +19,6 @@ CREATE TABLE LoaiPhong (
 CREATE TABLE LoaiPhim (
     maLoaiPhim NVARCHAR(50) PRIMARY KEY,
     tenLoaiPhim NVARCHAR(100) NOT NULL,
-    moTa NVARCHAR(255)
 );
 
 -- Bảng Loại ghế
@@ -86,6 +85,7 @@ CREATE TABLE Phim (
     moTa NVARCHAR(MAX),
     thoiLuongChieu INT NOT NULL, -- phút
     namPhatHanh INT,
+	path NVARCHAR(200),
     CONSTRAINT FK_Phim_LoaiPhim FOREIGN KEY (maLoaiPhim)
         REFERENCES LoaiPhim(maLoaiPhim)
         ON DELETE NO ACTION ON UPDATE CASCADE
@@ -244,6 +244,7 @@ CREATE TABLE ChiTietHoaDon (
 );
 
 
+<<<<<<< HEAD
 USE QuanLyRapChieuPhim;
 GO
 
@@ -325,3 +326,5 @@ INSERT INTO Phong VALUES
 ('PH09', N'Phòng 9 - Tầng 5', 40, 'LP05', 1),
 ('PH10', N'Phòng 10 - Tầng 5', 40, 'LP05', 1)
 
+=======
+>>>>>>> 241491a234b8d9e450355d12200143d542efac53

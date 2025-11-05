@@ -241,8 +241,8 @@ public class DatVeGUI extends JPanel implements ActionListener{
 			
 		}else if(source.equals(btnChonGhe)) {
 			GheDAO ghe = new GheDAO();
-		    ChonGheGUI chonGheGUI =	new ChonGheGUI("P01", phong, ghe, this);
-		    chonGheGUI.setVisible(true);
+		    //ChonGheGUI chonGheGUI =	new ChonGheGUI("P01", phong, ghe, this);
+		    //chonGheGUI.setVisible(true);
 		    
 		}else if(source.equals(btnXacNhanDatVe)) {
 			dv = new DatVe(TOOL_TIP_TEXT_KEY, TOOL_TIP_TEXT_KEY, null);

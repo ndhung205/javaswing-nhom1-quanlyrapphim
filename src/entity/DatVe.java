@@ -6,14 +6,28 @@ public class DatVe {
 	private String maDatVe;
 	private String trangThai;
 	private LocalDateTime ngayDat;
+	private KhachHang khachHang;
 	
 
-	public DatVe(String maDatVe, String trangThai, LocalDateTime ngayDat) {
+	public DatVe(String maDatVe, String trangThai, LocalDateTime ngayDat, KhachHang khachHang) {
 		super();
 		this.maDatVe = maDatVe;
 		this.trangThai = trangThai;
 		this.ngayDat = ngayDat;
+		this.khachHang = khachHang;
 	}
+	
+	
+	public KhachHang getKhachHang() {
+		return khachHang;
+	}
+
+
+	public void setKhachHang(KhachHang khachHang) {
+		this.khachHang = khachHang;
+	}
+
+
 	public String getTrangThai() {
 		return trangThai;
 	}

@@ -19,12 +19,12 @@ public class LoaiPhimDAO {
 				PreparedStatement stmt = conn.prepareStatement(sql);
 				ResultSet rs = stmt.executeQuery()){
 			while (rs.next()) {
-				LoaiPhim lp = new LoaiPhim(rs.getString("maLoaiPhim"), rs.getString("tenLoaiPhim"), rs.getString("moTa"));
+				LoaiPhim lp = new LoaiPhim(rs.getString("maLoaiPhim"), rs.getString("tenLoaiPhim"));
 				
 				list.add(lp);
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		
 		return list;

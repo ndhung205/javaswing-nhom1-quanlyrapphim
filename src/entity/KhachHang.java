@@ -5,8 +5,11 @@ public class KhachHang {
 	 private String maKH;
 	    private String tenKH;
 	    private String soDienThoai;
+	    
 
-	    public KhachHang(String maKH, String tenKH, String soDienThoai) {
+	    public KhachHang() {}
+
+		public KhachHang(String maKH, String tenKH, String soDienThoai) {
 	        setMaKH(maKH);
 	        setTenKH(tenKH);
 	        setSoDienThoai(soDienThoai);

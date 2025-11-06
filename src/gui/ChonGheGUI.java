@@ -13,7 +13,7 @@ import entity.Phong;
 /***
  * @author Tuan Dat
  */
-public class ChonGheGUI extends JFrame implements ActionListener {
+public class ChonGheGUI extends JDialog implements ActionListener {
 
     // Lưu danh sách ghế
 	private Phong room;
@@ -25,15 +25,16 @@ public class ChonGheGUI extends JFrame implements ActionListener {
 	private ArrayList<String> maGheChon;
 	private DatVeGUI parentFrame;
    
-    public ChonGheGUI(String maPhong,DatVeGUI parentFrame) {
+    public ChonGheGUI(Phong p,DatVeGUI parentFrame) {
     	this.phong = new PhongDAO();
-    	this.room = phong.findPhongByMa(maPhong);
+    	this.room = p;
     	this.danhSachGhe = new JButton[room.getSoLuongGhe()];
     	this.gheDao = new GheDAO();
     	this.parentFrame = parentFrame;
     	
     	if(this.room == null) {
     		JOptionPane.showConfirmDialog(this, "Vui lòng chọn phòng");
+    		dispose();
     		return;
     	}
     	
@@ -45,7 +46,7 @@ public class ChonGheGUI extends JFrame implements ActionListener {
         setTitle("Chọn ghế");
         setLayout(new BorderLayout());
         setSize(750, 500);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         // ----- Tiêu đề -----
         JPanel pnlTitle = new JPanel();
@@ -55,12 +56,12 @@ public class ChonGheGUI extends JFrame implements ActionListener {
         pnlTitle.add(lblTitle);
         add(pnlTitle, BorderLayout.NORTH);
 
-        // ----- Khu vực trung tâm -----
+
         JPanel pnlCenter = new JPanel();
         pnlCenter.setLayout(new BoxLayout(pnlCenter, BoxLayout.Y_AXIS));
         pnlCenter.setBackground(Color.WHITE);
 
-        // Màn hình rạp 
+
         ImageIcon manHinh = new ImageIcon(new ImageIcon("img/man_hinh.png").getImage().getScaledInstance(300, 50, java.awt.Image.SCALE_SMOOTH));
         JLabel lblScreen = new JLabel(manHinh, SwingConstants.CENTER);
         lblScreen.setFont(new Font("Arial", Font.BOLD, 20));
@@ -73,10 +74,8 @@ public class ChonGheGUI extends JFrame implements ActionListener {
         pnlCenter.add(pnlScreen);
         pnlCenter.add(Box.createVerticalStrut(20));
 
-        // ----- Sơ đồ ghế -----
         JPanel pnlGhe = createGhe();
 
-        // ----- Ghi chú màu -----
         JPanel pnlLegend = new JPanel();
         pnlLegend.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         pnlLegend.add(new JLabel("Ghi chú: "));
@@ -88,13 +87,12 @@ public class ChonGheGUI extends JFrame implements ActionListener {
         pnlLegend.add(new JLabel("  Đang chọn "));
         
 
-        // Gộp ghế + ghi chú
         JPanel pnlGheBox = new JPanel(new BorderLayout());
         pnlGheBox.add(pnlGhe, BorderLayout.CENTER);
         pnlGheBox.add(pnlLegend, BorderLayout.SOUTH);
         
         
-        // Nut 
+
         JPanel pnlButton = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         pnlButton.add(btnXacNhan = new JButton("Xác nhận chọn"));
         pnlButton.add(btnHuy = new JButton("Hủy"));
@@ -107,7 +105,7 @@ public class ChonGheGUI extends JFrame implements ActionListener {
         add(pnlCenter, BorderLayout.CENTER);
         add(pnlButton, BorderLayout.SOUTH);
 
-//        setVisible(true);
+        setGheTrong();
     }
 
     private JPanel colorBox(Color color, int w, int h) {
@@ -118,30 +116,40 @@ public class ChonGheGUI extends JFrame implements ActionListener {
         return box;
     }
     private JPanel createGhe() {
-    	int soHang = (int) Math.ceil((double) danhSachGhe.length / 10);
-        JPanel pnlGhe = new JPanel(new GridLayout(soHang, 10, 7, 7));
+        int soCot = 10; 
+        int soHang = (int) Math.ceil((double) danhSachGhe.length / soCot);
+
+        JPanel pnlGhe = new JPanel(new GridLayout(soHang, soCot, 7, 7));
         pnlGhe.setBackground(Color.WHITE);
 
-        int rowChar = 64; 
-        for (int i = 0; i < danhSachGhe.length; i++) {
-            if (i % 10 == 0) {
-                rowChar += 1;
+        int gheIndex = 0;
+        int rowChar = 'A'; 
+
+        for (int hang = 0; hang < soHang; hang++) {
+            for (int cot = 1; cot <= soCot; cot++) {
+                if (gheIndex >= danhSachGhe.length)
+                    break;
+
+                String seatLabel = (char) rowChar + String.valueOf(cot);
+                JButton ghe = new JButton(seatLabel);
+                ghe.setFocusPainted(false);
+
+                if (rowChar >= 'C' && rowChar <= 'F') {
+                    ghe.setBackground(new Color(255, 193, 7));
+                    ghe.setToolTipText("Ghế VIP");
+                } else {
+                    ghe.setBackground(Color.LIGHT_GRAY); 
+                }
+
+                ghe.addActionListener(this);
+                danhSachGhe[gheIndex++] = ghe;
+                pnlGhe.add(ghe);
             }
-            int seatNumber = (i % 10) + 1;
-            String seatLabel = String.valueOf((char) rowChar) + seatNumber;
-
-            JButton ghe = new JButton(seatLabel);
-            ghe.setBackground(Color.LIGHT_GRAY);
-            ghe.setFocusPainted(false);
-            ghe.addActionListener(this);
-
-            danhSachGhe[i] = ghe;
-            pnlGhe.add(ghe);
+            rowChar++; 
         }
-        
-        setGheTrong();
         return pnlGhe;
     }
+
     private void setGheTrong() {
         ArrayList<Ghe> listGheDat = gheDao.getAllGhe();
 
@@ -149,14 +157,12 @@ public class ChonGheGUI extends JFrame implements ActionListener {
             String maGhe = btnGhe.getText();
             boolean isDat = false;
             
-            // kiem tra ghe duoc dat hay chua
             for (Ghe ghe : listGheDat) {
                 if (ghe.getMaGhe().equals(maGhe)) {
                     isDat = true;
                     break;
                 }
             }
-            // set mau
             if (!isDat) {
                 btnGhe.setBackground(Color.lightGray); 
                 btnGhe.setEnabled(true);
@@ -172,7 +178,7 @@ public class ChonGheGUI extends JFrame implements ActionListener {
     	
     	int i =0 ;
     	for (JButton jButton : danhSachGhe) {
-			if(jButton.getBackground() == Color.green) {
+			if(jButton.getBackground().equals(Color.green)) {
 				maGheChon.add(jButton.getText());
 			}
 		}
@@ -190,10 +196,14 @@ public class ChonGheGUI extends JFrame implements ActionListener {
     		
     	}else if(source.equals(btnXacNhan)) {
     		setGheDaChon();
-    		if(parentFrame != null) {
-    			parentFrame.showGhe(maGheChon);
-    		}
-    		this.dispose();
+    	    if (maGheChon.isEmpty()) {
+    	        JOptionPane.showMessageDialog(this, "Vui lòng chọn ít nhất một ghế!");
+    	        return;
+    	    }
+    	    if (parentFrame != null) {
+    	        parentFrame.showGhe(maGheChon);
+    	    }
+    	    dispose();
     		
     	}else if(source instanceof JButton) {
     		JButton ghe = (JButton) e.getSource();

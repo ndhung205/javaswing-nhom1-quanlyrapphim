@@ -29,7 +29,7 @@ public class PhimDAO {
 				ResultSet rs = stmt.executeQuery()){
 			
 			while (rs.next()) {
-				LoaiPhim loaiPhim = new LoaiPhim(rs.getString("maLoaiPhim"), rs.getString("tenLoaiPhim"), " ");
+				LoaiPhim loaiPhim = new LoaiPhim(rs.getString("maLoaiPhim"), rs.getString("tenLoaiPhim"));
 				
 				Phim phim = new Phim(rs.getString("maPhim"), rs.getString("tenPhim"), loaiPhim, rs.getString("moTa"), rs.getInt("thoiLuongChieu"), rs.getInt("namPhatHanh"), rs.getString("poster"));
 				
@@ -58,7 +58,7 @@ public class PhimDAO {
 			ResultSet rs = stmt.executeQuery();
 			
 			while (rs.next()) {
-				LoaiPhim loaiPhim = new LoaiPhim(rs.getString("maLoaiPhim"), rs.getString("tenLoaiPhim"), " ");		
+				LoaiPhim loaiPhim = new LoaiPhim(rs.getString("maLoaiPhim"), rs.getString("tenLoaiPhim"));		
 				
 				Phim phim = new Phim(rs.getString("maPhim"), rs.getString("tenPhim"), loaiPhim, rs.getString("moTa"), rs.getInt("thoiLuongChieu"), rs.getInt("namPhatHanh"), rs.getString("poster"));
 				
@@ -209,9 +209,7 @@ public class PhimDAO {
             while (rs.next()) {
                 LoaiPhim loaiPhim = new LoaiPhim(
                     rs.getString("maLoaiPhim"),
-                    rs.getString("tenLoaiPhim"),
-                    rs.getString("moTaLoai")
-                );
+                    rs.getString("tenLoaiPhim"));
                 
                 Phim phim = new Phim(
                     rs.getString("maPhim"),
@@ -311,9 +309,7 @@ public class PhimDAO {
                 while (rs.next()) {
                     LoaiPhim lp = new LoaiPhim(
                         rs.getString("maLoaiPhim"),
-                        rs.getString("tenLoaiPhim"),
-                        rs.getString("moTaLoaiPhim")
-                    );
+                        rs.getString("tenLoaiPhim"));
 
                     Phim p = new Phim(
                         rs.getString("maPhim"),

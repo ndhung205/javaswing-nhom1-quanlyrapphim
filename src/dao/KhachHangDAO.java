@@ -91,4 +91,45 @@ public class KhachHangDAO {
 
         return n > 0;
     }
+    // tim kiem khach hang theo sdt
+    public KhachHang findKhachHangBySDT(String sdt) {
+        String sql = "SELECT * FROM KhachHang WHERE soDienThoai = ?";
+        KhachHang kh = null;
+
+        try {
+        	Connection con = DatabaseConnection.getInstance().getConnection();
+        	PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, sdt);
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                kh = new KhachHang(rs.getString("maKhachHang"),rs.getString("ten"),rs.getString("soDienThoai"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return kh;
+    }
+
+    // kiem tra su ton tai cua khach hang
+    public boolean isKhachHangExists(KhachHang k) {
+    	 String sql = "SELECT * FROM KhachHang WHERE soDienThoai = ?";
+    	 KhachHang kh = null;
+    	 try {
+    		Connection con = DatabaseConnection.getInstance().getConnection();
+         	PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, k.getSoDienThoai());
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()) {
+            	kh = new KhachHang(rs.getString("maKhachHang"),rs.getString("ten"),rs.getString("soDienThoai"));
+            }
+            
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	 
+    	return (kh !=null);
+	}
+
 }

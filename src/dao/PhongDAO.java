@@ -314,5 +314,45 @@ public class PhongDAO {
 		
 		
 	}
+	public Phong findPhongByTen(String ten) {
+        Phong phong = null;
+
+        String sql = """
+            SELECT p.maPhong, p.tenPhong, p.soLuongGhe, p.trangThai,
+                   lp.maLoaiPhong, lp.tenLoaiPhong, lp.moTa
+            FROM Phong p
+            LEFT JOIN LoaiPhong lp ON lp.maLoaiPhong = p.maLoaiPhong
+            WHERE p.tenPhong = ?
+        """;
+
+        try (Connection con = DatabaseConnection.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+
+            stmt.setString(1, ten);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    LoaiPhong loaiPhong = new LoaiPhong(
+                        rs.getString("maLoaiPhong"),
+                        rs.getString("tenLoaiPhong"),
+                        rs.getString("moTa")
+                    );
+
+                    phong = new Phong(
+                        rs.getString("maPhong"),
+                        rs.getString("tenPhong"),
+                        rs.getInt("soLuongGhe"),
+                        loaiPhong,
+                        rs.getBoolean("trangThai")
+                    );
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("Lỗi lấy danh sách phim trong db");
+        }
+
+        return phong;
+    }
 	
 }

@@ -44,8 +44,10 @@ public class ChucVu {
 		this.moTa = moTa;
 	}
 
+	
 	@Override
 	public String toString() {
-		return maChucVu + ";" + tenChucVu + ";" + moTa;
+	    return tenChucVu + " (" + maChucVu + ")";
 	}
+
 }

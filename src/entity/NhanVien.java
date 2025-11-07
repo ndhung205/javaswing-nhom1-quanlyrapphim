@@ -7,12 +7,12 @@ public class NhanVien {
 	private String hoTen;
 	private String sDT;
 	private String email;
-	private String chucVu;
+	private ChucVu chucVu;
 	private LocalDate ngayVaoLam;
 
 	public NhanVien() {}
 
-	public NhanVien(String maNV, String hoTen, String sDT, String email, String chucVu, LocalDate ngayVaoLam) {
+	public NhanVien(String maNV, String hoTen, String sDT, String email, ChucVu chucVu, LocalDate ngayVaoLam) {
 		setMaNV(maNV);
 		setHoTen(hoTen);
 		setsDT(sDT);
@@ -69,15 +69,15 @@ public class NhanVien {
 	        this.email = email;
 	}
 
-	public String getChucVu() {
+	public ChucVu getChucVu() {
 		return chucVu;
 	}
 
-	public void setChucVu(String chucVu) {
-		if (chucVu == null || chucVu.trim().isEmpty()) {
+	public void setChucVu(ChucVu chucVu) {
+		if (chucVu == null ) {
             throw new IllegalArgumentException("Mã chức vụ không được để trống");
         }
-        this.chucVu = chucVu.trim();
+        this.chucVu = chucVu;
 	}
 
 	public LocalDate getNgayVaoLam() {

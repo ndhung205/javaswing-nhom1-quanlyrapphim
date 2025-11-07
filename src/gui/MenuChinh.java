@@ -22,7 +22,7 @@ import javax.swing.SwingUtilities;
 // import dao.DatVeDAO;
 // import dao.PhimDAO;
 // import dao.PhongDAO;
-
+import gui.NhanVienGUI;
 public class MenuChinh extends JFrame {
 	
 	private String currentUserRole; // <-- Thêm biến này để lưu vai trò
@@ -298,8 +298,7 @@ public class MenuChinh extends JFrame {
 	
 	private void openQLNhanVienGUI() {
 		mainPanel.removeAll();
-	    //mainPanel.add(new DatVeGUI());
-	    showNotImplemented("Quản lý NhanVien - Của Nam");
+	   mainPanel.add(new NhanVienGUI());
 	    // cập nhật lại giao diện
 	    mainPanel.revalidate();
 	    mainPanel.repaint();
@@ -307,8 +306,7 @@ public class MenuChinh extends JFrame {
 	
 	private void openQLKhachHangGUI() {
 		mainPanel.removeAll();
-	    //mainPanel.add(new DatVeGUI());
-	    showNotImplemented("Quản lý KhachHang - Của Nam");
+	   mainPanel.add(new KhachHangGUI());
 	    // cập nhật lại giao diện
 	    mainPanel.revalidate();
 	    mainPanel.repaint();

@@ -6,6 +6,7 @@ package gui;
 import dao.LoaiPhongDAO;
 import dao.PhongDAO;
 import entity.Phong;
+import entity.LoaiPhim;
 import entity.LoaiPhong;
 
 import javax.swing.*;
@@ -13,6 +14,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Giao diện quản lý Phòng chiếu
@@ -34,6 +36,10 @@ public class PhongGUI extends JPanel {
     
     // Mode: "ADD" hoặc "EDIT"
     private String currentMode = "ADD";
+	private JLabel lblLoc;
+	private JComboBox<LoaiPhong> cboLocLoaiPhong;
+	private JComboBox<String> cboLocTrangThai;
+	private JLabel lblSearch;
     
     public PhongGUI() {
         phongDAO = new PhongDAO();
@@ -119,7 +125,7 @@ public class PhongGUI extends JPanel {
         formFields.add(new JLabel("Loại phòng: *"), gbc);
         gbc.gridx = 1;
         cboLoaiPhong = new JComboBox<>();
-        loadLoaiPhong();
+        loadLoaiPhong(cboLoaiPhong);
         formFields.add(cboLoaiPhong, gbc);
         
         row++;
@@ -200,11 +206,14 @@ public class PhongGUI extends JPanel {
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         panel.setBackground(Color.WHITE);
         
+        JPanel xuly = new JPanel();
+        xuly.setLayout(new BoxLayout(xuly, BoxLayout.Y_AXIS));
+        
         // Search panel
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         searchPanel.setBackground(Color.WHITE);
         
-        searchPanel.add(new JLabel("Tìm kiếm:"));
+        searchPanel.add(lblSearch = new JLabel("Tìm kiếm theo tên phòng:"));
         txtTimKiem = new JTextField(20);
         searchPanel.add(txtTimKiem);
         
@@ -215,6 +224,26 @@ public class PhongGUI extends JPanel {
         JButton btnShowAll = new JButton("Hiện tất cả");
         btnShowAll.addActionListener(e -> loadData());
         searchPanel.add(btnShowAll);
+        
+        JPanel loc = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        loc.setBackground(Color.WHITE);
+        
+        loc.add(lblLoc = new JLabel("Lọc: "));
+        
+        cboLocLoaiPhong = new JComboBox<LoaiPhong>();
+        loadLoaiPhong(cboLocLoaiPhong);
+        cboLocLoaiPhong.addActionListener(e -> locLoaiPhong());
+        loc.add(cboLocLoaiPhong);
+        
+        cboLocTrangThai = new JComboBox<String>();
+        loadTrangThai(cboLocTrangThai);
+        cboLocTrangThai.addActionListener(e -> locTrangThai());
+        loc.add(cboLocTrangThai);
+        
+        lblLoc.setPreferredSize(lblSearch.getPreferredSize());
+        
+        xuly.add(searchPanel);
+        xuly.add(loc);
         
         // Table
         String[] columns = {"Mã phòng", "Tên phòng", "Loại phòng", "Số ghế", "Trạng thái"};
@@ -246,7 +275,7 @@ public class PhongGUI extends JPanel {
         
         JScrollPane scrollPane = new JScrollPane(tablePhong);
         
-        panel.add(searchPanel, BorderLayout.NORTH);
+        panel.add(xuly, BorderLayout.NORTH);
         panel.add(scrollPane, BorderLayout.CENTER);
         
         // Info label
@@ -258,7 +287,61 @@ public class PhongGUI extends JPanel {
         return panel;
     }
     
-    private void loadLoaiPhong() {
+    private void locTrangThai() {
+		// TODO Auto-generated method stub
+    	String tt = (String) cboLocTrangThai.getSelectedItem();
+    	
+    	phongDAO = new PhongDAO();
+    	int ttInt = tt.equalsIgnoreCase("Hoạt động") ? 1 : 0;
+    	List<Phong> list = phongDAO.getPhongByTrangThai(ttInt);
+    	
+    	tableModel.setRowCount(0);
+    	for (Phong phong : list) {
+    		String trangThai = phong.isTrangThai() ? "Hoạt động" : "Bảo trì";
+            
+            tableModel.addRow(new Object[]{
+                phong.getMaPhong(),
+                phong.getTenPhong(),
+                phong.getLoaiPhong().getTenLoaiPhong(),
+                phong.getSoLuongGhe(),
+                trangThai
+            });
+		}
+	}
+
+	private void loadTrangThai(JComboBox<String> cboLocTrangThai2) {
+		// TODO Auto-generated method stub
+		phongDAO = new PhongDAO();
+		Set<Boolean> list = phongDAO.getTrangThai();
+		
+		for (Boolean boolean1 : list) {
+			cboLocTrangThai2.addItem(boolean1 == true ? "Hoạt động" : "Bảo trì");
+		}
+		
+	}
+
+	private void locLoaiPhong() {
+		// TODO Auto-generated method stub
+		phongDAO = new PhongDAO();
+		LoaiPhong loaiPhong = (LoaiPhong) cboLocLoaiPhong.getSelectedItem();
+		List<Phong> list = phongDAO.getPhongByLoaiPhong(loaiPhong);
+		
+		tableModel.setRowCount(0);
+    	for (Phong phong : list) {
+    		String trangThai = phong.isTrangThai() ? "Hoạt động" : "Bảo trì";
+            
+            tableModel.addRow(new Object[]{
+                phong.getMaPhong(),
+                phong.getTenPhong(),
+                phong.getLoaiPhong().getTenLoaiPhong(),
+                phong.getSoLuongGhe(),
+                trangThai
+            });
+		}
+		
+	}
+
+	private void loadLoaiPhong(JComboBox<LoaiPhong> cbo) {
         // Mock data - Tuần 3 thay bằng LookupService.getAllLoaiPhong()
     	loaiPhongDAO = new LoaiPhongDAO();
         List<LoaiPhong> list = loaiPhongDAO.getAllLoaiPhong();
@@ -267,7 +350,7 @@ public class PhongGUI extends JPanel {
         for (LoaiPhong lp : list) {
             model.addElement(lp);
         }
-        cboLoaiPhong.setModel(model);
+        cbo.setModel(model);
     }
     
     private void loadData() {

@@ -34,8 +34,6 @@ public class PhimGUI extends JPanel {
     private JTextArea txtMoTa;
     private JComboBox<LoaiPhim> cboLoaiPhim;
     private JButton btnThem, btnSua, btnXoa, btnLamMoi, btnTimKiem;
-    private JLabel lblPoster;
-    private String selectedPosterPath;
 
     // DAO
     private PhimDAO phimDAO;
@@ -277,7 +275,7 @@ public class PhimGUI extends JPanel {
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         searchPanel.setBackground(Color.WHITE);
         
-        searchPanel.add(lblSearch = new JLabel("Tìm kiếm theo tên phim:"));
+        searchPanel.add(lblSearch = new JLabel("Tìm kiếm theo tên phim hoặc mô tả:"));
         txtTimKiem = new JTextField(20);
         searchPanel.add(txtTimKiem);
         
@@ -294,7 +292,7 @@ public class PhimGUI extends JPanel {
         
         loc.add(lblLoc = new JLabel("Lọc: "));
         
-       cboLocLoaiPhim = new JComboBox<LoaiPhim>();
+        cboLocLoaiPhim = new JComboBox<LoaiPhim>();
         loadLoaiPhim(cboLocLoaiPhim);
         cboLocLoaiPhim.addActionListener(e -> locLoaiPhim());
         loc.add(cboLocLoaiPhim);
@@ -361,7 +359,8 @@ public class PhimGUI extends JPanel {
 		tableModel.setRowCount(0);
 		for (Phim phim : list) {
 			tableModel.addRow(new Object[] {
-					phim.getMaPhim(), phim.getTenPhim(), phim.getLoaiPhim().getTenLoaiPhim(), phim.getThoiLuongChieu(), phim.getNamPhatHanh(), phim.getMoTa()
+					phim.getMaPhim(), phim.getTenPhim(), phim.getLoaiPhim().getTenLoaiPhim(), 
+					phim.getThoiLuongChieu(), phim.getNamPhatHanh(), phim.getMoTa(), phim.getPoster()
 			});
 		}
 	}

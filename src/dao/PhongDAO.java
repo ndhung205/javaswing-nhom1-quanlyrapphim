@@ -1,14 +1,16 @@
 package dao;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import connectDB.DatabaseConnection;
 import entity.LoaiPhong;
+import entity.Phim;
 import entity.Phong;
 
 public class PhongDAO {
@@ -263,47 +265,6 @@ public class PhongDAO {
         return false;
     }
     
-    /**
-     * Lấy danh sách phòng đang hoạt động
-     * @return List<Phong>
-     */
-    public List<Phong> getPhongHoatDong() {
-        List<Phong> list = new ArrayList<>();
-        String sql = "SELECT p.maPhong, p.tenPhong, p.soLuongGhe, p.trangThai, " +
-                     "p.maLoaiPhong, lp.tenLoaiPhong, lp.moTa " +
-                     "FROM Phong p " +
-                     "LEFT JOIN LoaiPhong lp ON p.maLoaiPhong = lp.maLoaiPhong " +
-                     "WHERE p.trangThai = 1 " +
-                     "ORDER BY p.tenPhong";
-        
-        try (Connection conn = DatabaseConnection.getInstance().getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            
-            while (rs.next()) {
-                LoaiPhong loaiPhong = new LoaiPhong(
-                    rs.getString("maLoaiPhong"),
-                    rs.getString("tenLoaiPhong"),
-                    rs.getString("moTa")
-                );
-                
-                Phong phong = new Phong(
-                    rs.getString("maPhong"),
-                    rs.getString("tenPhong"),
-                    rs.getInt("soLuongGhe"),
-                    loaiPhong,
-                    rs.getBoolean("trangThai")
-                );
-                
-                list.add(phong);
-            }
-            
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        
-        return list;
-    }
 	
 	public static void main(String[] args) {
 		PhongDAO phongDAO = new PhongDAO();
@@ -354,5 +315,104 @@ public class PhongDAO {
 
         return phong;
     }
+	
+	public Set<Boolean> getTrangThai() {
+		Set<Boolean> list = new HashSet<Boolean>();
+		
+		String sql = """
+				SELECT trangThai
+				FROM Phong
+				ORDER BY trangThai
+				""";
+		
+		try (Connection conn = DatabaseConnection.getInstance().getConnection();
+				PreparedStatement stmt = conn.prepareStatement(sql);
+				ResultSet rs = stmt.executeQuery()){
+			while (rs.next()) {
+				list.add(rs.getBoolean("trangThai"));
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	
+	public List<Phong> getPhongByTrangThai(int tt) {
+		List<Phong> list = new ArrayList<Phong>();
+		
+		String sql = "SELECT p.maPhong, p.tenPhong, p.soLuongGhe, p.trangThai, " +
+                "p.maLoaiPhong, lp.tenLoaiPhong, lp.moTa " +
+                "FROM Phong p " +
+                "LEFT JOIN LoaiPhong lp ON p.maLoaiPhong = lp.maLoaiPhong " +
+                "WHERE p.trangThai = ? " +
+                "ORDER BY p.tenPhong";
+   
+		try (Connection conn = DatabaseConnection.getInstance().getConnection();
+				PreparedStatement stmt = conn.prepareStatement(sql)) {
+       
+			stmt.setInt(1, tt);
+	   
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				LoaiPhong loaiPhong = new LoaiPhong(
+					rs.getString("maLoaiPhong"),
+					rs.getString("tenLoaiPhong"),
+					rs.getString("moTa")
+					);
+	           
+				Phong phong = new Phong(
+					rs.getString("maPhong"),
+					rs.getString("tenPhong"),
+					rs.getInt("soLuongGhe"),
+					loaiPhong,
+					rs.getBoolean("trangThai")
+					);
+	           
+				list.add(phong);
+			}
+		   } catch (SQLException e) {
+		       e.printStackTrace();
+		   }
+		
+		return list;
+		
+	}
+	
+	public List<Phong> getPhongByLoaiPhong(LoaiPhong lp) {
+		List<Phong> list = new ArrayList<Phong>();
+		
+		String sql = """
+	            SELECT maPhong, tenPhong, soLuongGhe, trangThai
+	            FROM Phong
+	            WHERE maLoaiPhong = ?
+	            ORDER BY maPhong
+	        """;
+		
+		try (Connection conn = DatabaseConnection.getInstance().getConnection();
+	             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+	            stmt.setString(1, lp.getMaLoaiPhong());
+
+	            try (ResultSet rs = stmt.executeQuery()) {
+	                while (rs.next()) {
+	                    Phong p = new Phong(
+	                        rs.getString("maPhong"),
+	                        rs.getString("tenPhong"),
+	                        rs.getInt("soLuongGhe"),
+	                        lp,
+	                        rs.getBoolean("trangThai")
+	                    );
+
+	                    list.add(p);
+	                }
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+		
+		return list;
+	}
 	
 }

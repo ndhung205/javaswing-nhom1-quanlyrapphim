@@ -224,12 +224,12 @@ public class DangNhapGUI extends JFrame {
         if (username.equals(MOCK_USERNAME) && password.equals(MOCK_PASSWORD)) {
             JOptionPane.showMessageDialog(this,
                     "✅ Đăng nhập thành công!\n\n" +
-                            "Xin chào Admin!\n(Mock authentication - Tuần 3 sẽ dùng TaiKhoanDAO của Nam)",
+                            "Xin chào " + "taiKhoan.getVaiTro(): " + "taiKhoan.getHoTen()" + "!", //Sửa chỗ này nữa
                     "Thành công",
                     JOptionPane.INFORMATION_MESSAGE);
 
             // Mở MenuChinh (giống bản test)
-            MenuChinh menuChinh = new MenuChinh();
+            MenuChinh menuChinh = new MenuChinh("Admin"); // Nam khi tài khoản lấy thành công thì đưa cái vaitro vào chỗ "Amdin" ví dụ là MenuChinh(taiKhoan.getVaiTro())
             menuChinh.setVisible(true);
             this.dispose();
 

@@ -82,7 +82,6 @@ public class Phim {
 
     @Override
     public String toString() {
-        return "Phim [maPhim=" + maPhim + ", tenPhim=" + tenPhim + ", loaiPhim=" + loaiPhim + ", moTa=" + moTa
-                + ", thoiLuongChieu=" + thoiLuongChieu + ", namPhatHanh=" + namPhatHanh + ", poster=" + poster + "]";
+        return tenPhim;
     }
 }

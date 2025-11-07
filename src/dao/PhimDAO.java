@@ -188,49 +188,53 @@ public class PhimDAO {
      * @param keyword
      * @return List<Phim>
      */
-    public List<Phim> search(String keyword) {
-        List<Phim> list = new ArrayList<>();
-        String sql = "SELECT p.maPhim, p.tenPhim, p.moTa, p.thoiLuongChieu, p.namPhatHanh, p.poster" +
-                     "p.maLoaiPhim, lp.tenLoaiPhim, lp.moTa as moTaLoai " +
-                     "FROM Phim p " +
-                     "LEFT JOIN LoaiPhim lp ON p.maLoaiPhim = lp.maLoaiPhim " +
-                     "WHERE p.tenPhim LIKE ? OR p.moTa LIKE ? " +
-                     "ORDER BY p.tenPhim";
-        
-        try (Connection conn = DatabaseConnection.getInstance().getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
-            String searchPattern = "%" + keyword + "%";
-            stmt.setString(1, searchPattern);
-            stmt.setString(2, searchPattern);
-            
-            ResultSet rs = stmt.executeQuery();
-            
-            while (rs.next()) {
-                LoaiPhim loaiPhim = new LoaiPhim(
-                    rs.getString("maLoaiPhim"),
-                    rs.getString("tenLoaiPhim"));
-                
-                Phim phim = new Phim(
-                    rs.getString("maPhim"),
-                    rs.getString("tenPhim"),
-                    loaiPhim,
-                    rs.getString("moTa"),
-                    rs.getInt("thoiLuongChieu"),
-                    rs.getInt("namPhatHanh"),
-                    rs.getString("poster")
-                );
-                
-                list.add(phim);
-            }
-            
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.err.println("❌ Lỗi khi tìm kiếm phim: " + e.getMessage());
-        }
-        
-        return list;
-    }
+	public List<Phim> search(String keyword) {
+	    List<Phim> list = new ArrayList<>();
+
+	    String sql = "SELECT p.maPhim, p.tenPhim, p.moTa, p.thoiLuongChieu, p.namPhatHanh, p.poster, " +
+	                 "p.maLoaiPhim, lp.tenLoaiPhim " +
+	                 "FROM Phim p " +
+	                 "LEFT JOIN LoaiPhim lp ON p.maLoaiPhim = lp.maLoaiPhim " +
+	                 "WHERE p.tenPhim LIKE ? OR p.moTa LIKE ? " +
+	                 "ORDER BY p.tenPhim";
+
+	    try (Connection conn = DatabaseConnection.getInstance().getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+	        String searchPattern = "%" + keyword + "%";
+	        stmt.setString(1, searchPattern);
+	        stmt.setString(2, searchPattern);
+
+	        ResultSet rs = stmt.executeQuery();
+
+	        while (rs.next()) {
+
+	            LoaiPhim loaiPhim = new LoaiPhim(
+	                rs.getString("maLoaiPhim"),
+	                rs.getString("tenLoaiPhim")
+	            );
+
+	            Phim phim = new Phim(
+	                rs.getString("maPhim"),
+	                rs.getString("tenPhim"),
+	                loaiPhim,
+	                rs.getString("moTa"),
+	                rs.getInt("thoiLuongChieu"),
+	                rs.getInt("namPhatHanh"),
+	                rs.getString("poster")
+	            );
+
+	            list.add(phim);
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.err.println("❌ Lỗi khi tìm kiếm phim: " + e.getMessage());
+	    }
+
+	    return list;
+	}
+
     
     public Set<Integer> getNamPhatHanh() {
 		Set<Integer> list = new HashSet<Integer>();
@@ -292,7 +296,7 @@ public class PhimDAO {
 
         String sql = """
             SELECT p.maPhim, p.tenPhim, p.moTa AS moTaPhim, 
-                   p.thoiLuongChieu, p.namPhatHanh, poster
+                   p.thoiLuongChieu, p.namPhatHanh, p.poster,
                    lp.maLoaiPhim, lp.tenLoaiPhim, lp.moTa AS moTaLoaiPhim
             FROM Phim p
             LEFT JOIN LoaiPhim lp ON p.maLoaiPhim = lp.maLoaiPhim

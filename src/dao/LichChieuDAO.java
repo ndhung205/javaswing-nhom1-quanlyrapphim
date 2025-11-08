@@ -440,6 +440,66 @@ public class LichChieuDAO {
         return list;
     }
     
+    /**
+     * Tìm lịch chiếu theo phòng và giờ bắt đầu (String giờBatDau từ ComboBox)
+     * @param maPhong
+     * @param gioBatDauStr - ví dụ: "2025-11-07T19:30" hoặc "19:30"
+     * @return LichChieu hoặc null nếu không tìm thấy
+     */
+    public LichChieu findByPhongAndTime(String maPhong, String gioBatDauStr) {
+        String sql = """
+            SELECT lc.*, 
+                   p.tenPhim, p.moTa, p.thoiLuongChieu, p.namPhatHanh, p.poster,
+                   ph.tenPhong, ph.soLuongGhe, ph.trangThai
+            FROM LichChieu lc
+            JOIN Phim p ON lc.maPhim = p.maPhim
+            JOIN Phong ph ON lc.maPhong = ph.maPhong
+            WHERE lc.maPhong = ?
+              AND FORMAT(lc.gioBatDau, 'yyyy-MM-dd HH:mm') = ?
+        """;
+
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            // ===== XỬ LÝ CHUỖI GIOBATDAU =====
+            // Case 1: chuỗi chỉ có HH:mm → tự ghép ngày chiếu
+            if (gioBatDauStr.length() == 5) {  // "19:30"
+                // Lấy ngày gần nhất của lịch chiếu theo phòng
+                LichChieu lcSample = getSampleByPhong(maPhong);
+                if (lcSample == null) return null;
+
+                String ngay = lcSample.getNgayChieu().toString();  // yyyy-MM-dd
+                gioBatDauStr = ngay + " " + gioBatDauStr;          // yyyy-MM-dd HH:mm
+            }
+
+            // Case 2: nếu người dùng nhập kiểu 2025-11-07T19:30 → đổi thành đúng format
+            gioBatDauStr = gioBatDauStr.replace("T", " ");
+
+            stmt.setString(1, maPhong);
+            stmt.setString(2, gioBatDauStr);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return createLichChieuFromResultSet(rs);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("❌ Lỗi khi tìm lịch chiếu theo phòng và giờ: " + e.getMessage());
+        }
+
+        return null;
+    }
+
+    /** 
+     * Lấy 1 lịch chiếu bất kỳ trong phòng, dùng để biết ngàyChiếu thực tế.
+     */
+    private LichChieu getSampleByPhong(String maPhong) {
+        List<LichChieu> list = getByPhong(maPhong);
+        return list.isEmpty() ? null : list.get(0);
+    }
+    
     public static void main(String[] args) {
 		LichChieuDAO lichChieuDAO = new LichChieuDAO();
 		

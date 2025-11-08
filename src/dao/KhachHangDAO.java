@@ -131,5 +131,5 @@ public class KhachHangDAO {
     	 
     	return (kh !=null);
 	}
-
+    
 }

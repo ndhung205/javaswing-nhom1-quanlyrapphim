@@ -122,7 +122,7 @@ public class DangNhapGUI extends JFrame {
         TaiKhoan tk = taiKhoanDAO.dangNhap(user, pass);
         if (tk != null) {
             JOptionPane.showMessageDialog(this, "Đăng nhập thành công!\nXin chào " + tk.getTenTK() + " (" + tk.getVaiTro() + ")");
-            new MenuChinh(tk.getVaiTro()).setVisible(true);
+            new MenuChinh(tk.getTenTK(), tk.getVaiTro()).setVisible(true);
             dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Sai tên đăng nhập hoặc mật khẩu!", "Lỗi", JOptionPane.ERROR_MESSAGE);

@@ -7,7 +7,9 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.List;
 
+import javax.swing.Box;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -18,20 +20,23 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import entity.Ghe;
 // Các import DAO này có thể bạn chưa dùng, nhưng cứ để
 // import dao.DatVeDAO;
 // import dao.PhimDAO;
 // import dao.PhongDAO;
 import gui.NhanVienGUI;
 public class MenuChinh extends JFrame {
-	
-	private String currentUserRole; // <-- Thêm biến này để lưu vai trò
+	// <-- THAY ĐỔI 2: THÊM BIẾN VÀ CẬP NHẬT CONSTRUCTOR -->
+	private String currentUserRole; 
+	private String currentUsername; // Thêm biến lưu tên người dùng
 	// Components
 	private JMenuBar menuBar;
 	private JPanel mainPanel;
 
-	public MenuChinh(String role) {
-		this.currentUserRole = role;
+	public MenuChinh(String username, String role) {
+		this.currentUsername = username; // Lưu tên
+		this.currentUserRole = role; // Lưu vai trò
 		mainPanel = new JPanel();
 		initComponents();
 		setLocationRelativeTo(null);
@@ -185,6 +190,18 @@ public class MenuChinh extends JFrame {
 
 		menuBar.add(menuHeThong); // Thêm menu Hệ thống vào
 
+		// <-- THAY ĐỔI 3: THÊM 2 DÒNG NÀY ĐỂ HIỂN THỊ TÊN BÊN PHẢI -->
+		
+		// 1. Thêm một "lò xo" vô hình để đẩy mọi thứ sang phải
+		menuBar.add(Box.createHorizontalGlue());
+
+		// 2. Thêm JLabel với thông tin người dùng (thêm 2 dấu cách cuối cho đẹp)
+		JLabel lblUserInfo = new JLabel("Chào, " + currentUsername + " (" + currentUserRole + ")  ");
+		lblUserInfo.setFont(new Font("Arial", Font.BOLD, 15));
+		menuBar.add(lblUserInfo);
+				
+		// <-- KẾT THÚC THAY ĐỔI 3 -->
+		
 		setJMenuBar(menuBar);
 	}
 
@@ -246,9 +263,26 @@ public class MenuChinh extends JFrame {
 	}
 
 	private void openSoDoGheGUI() {
-		// TODO: Tuần 2 - Tạo SoDoGheGUI
-		showNotImplemented("SoDoGheGUI - Đang phát triển (Tuần 2)");
-	}
+        // Yêu cầu nhập mã phòng và mã lịch chiếu
+        String maPhong = JOptionPane.showInputDialog(this, "Nhập mã phòng (VD: P01):");
+        if (maPhong == null || maPhong.trim().isEmpty()) return;
+        
+        String maLichChieu = JOptionPane.showInputDialog(this, "Nhập mã lịch chiếu (VD: LC001):");
+        if (maLichChieu == null || maLichChieu.trim().isEmpty()) return;
+        
+        SoDoGheGUI soDoGheGUI = new SoDoGheGUI(this, maPhong.trim(), maLichChieu.trim());
+        soDoGheGUI.setVisible(true);
+        
+        // Hiển thị kết quả
+        List<Ghe> gheChon = soDoGheGUI.getGheDaChon();
+        if (!gheChon.isEmpty()) {
+            StringBuilder sb = new StringBuilder("Đã chọn " + gheChon.size() + " ghế:\n");
+            for (entity.Ghe ghe : gheChon) {
+                sb.append("- ").append(ghe.getMaGhe()).append("\n");
+            }
+            JOptionPane.showMessageDialog(this, sb.toString(), "Kết quả", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
 
 	private void openLichChieuGUI() {
 		mainPanel.removeAll();
@@ -399,7 +433,7 @@ public class MenuChinh extends JFrame {
 	// ========== MAIN METHOD (FOR TESTING) ==========
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> { 
-			MenuChinh menu = new MenuChinh("Admin");
+			MenuChinh menu = new MenuChinh("HungAdmin", "Admin");
 			menu.setVisible(true);
 		});
 	}

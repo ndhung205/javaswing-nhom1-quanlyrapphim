@@ -55,7 +55,7 @@ public class PhimGUI extends JPanel {
     }
     
     private void initComponents() {
-        setSize(1100, 700);
+        setSize(HEIGHT, WIDTH);
         setLayout(new BorderLayout(10, 10));
         
         // Header

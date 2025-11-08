@@ -94,9 +94,6 @@ public class MenuChinh extends JFrame {
 			JMenuItem itemGhe = new JMenuItem("Quản lý Ghế");
 			itemGhe.addActionListener(e -> openGheGUI());
 			menuPhong.add(itemGhe);
-			JMenuItem itemSoDoGhe = new JMenuItem("Sơ đồ Ghế");
-			itemSoDoGhe.addActionListener(e -> openSoDoGheGUI());
-			menuPhong.add(itemSoDoGhe);
 			menuBar.add(menuPhong);
 
 			// --- Menu Lịch Chiếu ---
@@ -165,10 +162,10 @@ public class MenuChinh extends JFrame {
 			JMenuItem itemLoaiPhim = new JMenuItem("Quản lý Loại phim");
 			itemLoaiPhim.addActionListener(e -> openQLLoaiPhimGUI());
 			menuDanhMuc.add(itemLoaiPhim);
-			JMenuItem itemLoaiPhong = new JMenuItem("Quản lý loại phòng");
+			JMenuItem itemLoaiPhong = new JMenuItem("Quản lý Loại phòng");
 			itemLoaiPhong.addActionListener(e -> openQLLoaiPhongGUI());
 			menuDanhMuc.add(itemLoaiPhong);
-			JMenuItem itemLoaiGhe = new JMenuItem("Quản lý loại ghế");
+			JMenuItem itemLoaiGhe = new JMenuItem("Quản lý Loại ghế");
 			itemLoaiGhe.addActionListener(e -> openQLLoaiGheGUI());
 			menuDanhMuc.add(itemLoaiGhe);
 			JMenuItem itemPThucThanhToan = new JMenuItem("Quản lý Phương thức thanh toán");
@@ -262,28 +259,6 @@ public class MenuChinh extends JFrame {
 		mainPanel.repaint();
 	}
 
-	private void openSoDoGheGUI() {
-        // Yêu cầu nhập mã phòng và mã lịch chiếu
-        String maPhong = JOptionPane.showInputDialog(this, "Nhập mã phòng (VD: P01):");
-        if (maPhong == null || maPhong.trim().isEmpty()) return;
-        
-        String maLichChieu = JOptionPane.showInputDialog(this, "Nhập mã lịch chiếu (VD: LC001):");
-        if (maLichChieu == null || maLichChieu.trim().isEmpty()) return;
-        
-        SoDoGheGUI soDoGheGUI = new SoDoGheGUI(this, maPhong.trim(), maLichChieu.trim());
-        soDoGheGUI.setVisible(true);
-        
-        // Hiển thị kết quả
-        List<Ghe> gheChon = soDoGheGUI.getGheDaChon();
-        if (!gheChon.isEmpty()) {
-            StringBuilder sb = new StringBuilder("Đã chọn " + gheChon.size() + " ghế:\n");
-            for (entity.Ghe ghe : gheChon) {
-                sb.append("- ").append(ghe.getMaGhe()).append("\n");
-            }
-            JOptionPane.showMessageDialog(this, sb.toString(), "Kết quả", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
-
 	private void openLichChieuGUI() {
 		mainPanel.removeAll();
 	    mainPanel.add(new LichChieuGUI());
@@ -364,8 +339,8 @@ public class MenuChinh extends JFrame {
 	
 	private void openQLLoaiPhongGUI() {
 		mainPanel.removeAll();
-	    //mainPanel.add(new DatVeGUI());
-	    showNotImplemented("Quản lý loại Phòng - Của Nam");
+	    mainPanel.add(new LoaiPhongGUI());
+	    
 	    // cập nhật lại giao diện
 	    mainPanel.revalidate();
 	    mainPanel.repaint();
@@ -373,8 +348,8 @@ public class MenuChinh extends JFrame {
 	
 	private void openQLLoaiPhimGUI() {
 		mainPanel.removeAll();
-	    //mainPanel.add(new DatVeGUI());
-	    showNotImplemented("Quản lý loại phim - Của Nam");
+	    mainPanel.add(new LoaiPhimGUI());
+
 	    // cập nhật lại giao diện
 	    mainPanel.revalidate();
 	    mainPanel.repaint();
@@ -382,8 +357,7 @@ public class MenuChinh extends JFrame {
 	
 	private void openQLLoaiGheGUI() {
 		mainPanel.removeAll();
-	    //mainPanel.add(new DatVeGUI());
-	    showNotImplemented("Quản lý loại ghế - Của Nam");
+	    mainPanel.add(new LoaiGheGUI());
 	    // cập nhật lại giao diện
 	    mainPanel.revalidate();
 	    mainPanel.repaint();
@@ -391,8 +365,7 @@ public class MenuChinh extends JFrame {
 	
 	private void openQLPPThanhToanGUI() {
 		mainPanel.removeAll();
-	    //mainPanel.add(new DatVeGUI());
-	    showNotImplemented("Quản lý pp thanh toán - Của Nam");
+	    mainPanel.add(new PhuongThucThanhToanGUI());
 	    // cập nhật lại giao diện
 	    mainPanel.revalidate();
 	    mainPanel.repaint();
@@ -400,8 +373,7 @@ public class MenuChinh extends JFrame {
 	
 	private void openQLThueGUI() {
 		mainPanel.removeAll();
-	    //mainPanel.add(new DatVeGUI());
-	    showNotImplemented("Quản lý thuế- Của Nam");
+	    mainPanel.add(new ThueGUI());
 	    // cập nhật lại giao diện
 	    mainPanel.revalidate();
 	    mainPanel.repaint();

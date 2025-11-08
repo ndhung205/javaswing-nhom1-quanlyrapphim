@@ -4,6 +4,11 @@ public class PhuongThucThanhToan {
 	private String maPhuongThuc;
 	private String tenPhuongThuc;
 	private String moTa;
+	
+	public PhuongThucThanhToan() {
+		// TODO Auto-generated constructor stub
+	}
+	
 	public PhuongThucThanhToan(String maPhuongThuc, String tenPhuongThuc, String moTa) {
 		super();
 		this.maPhuongThuc = maPhuongThuc;
@@ -25,5 +30,11 @@ public class PhuongThucThanhToan {
 	public String getMaPhuongThuc() {
 		return maPhuongThuc;
 	}
+
+	public void setMaPhuongThuc(String maPhuongThuc) {
+		this.maPhuongThuc = maPhuongThuc;
+	}
+	
+	
 	
 }

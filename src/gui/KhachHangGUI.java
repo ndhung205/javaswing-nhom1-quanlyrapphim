@@ -87,12 +87,20 @@ public class KhachHangGUI extends JPanel {
     }
 
     private void loadData() {
-        model.setRowCount(0);
+        model.setRowCount(0); 
         ArrayList<KhachHang> ds = khDAO.getAllKhachHang();
         for (KhachHang kh : ds) {
-            model.addRow(new Object[]{kh.getMaKH(), kh.getTenKH(), kh.getSoDienThoai()});
+            model.addRow(new Object[]{
+                kh.getMaKH(),
+                kh.getTenKH(),
+                kh.getSoDienThoai()
+            });
         }
+
+        
+        clearForm();
     }
+
 
     private void themKhachHang() {
         String ma = txtMaKH.getText().trim();
@@ -166,6 +174,15 @@ public class KhachHangGUI extends JPanel {
             JOptionPane.showMessageDialog(this, "Không tìm thấy khách hàng có SĐT: " + sdt);
         }
     }
+    private void clearForm() {
+        txtMaKH.setText("");
+        txtTenKH.setText("");
+        txtSDT.setText("");
+        txtTimKiem.setText("");
+        table.clearSelection();
+        txtMaKH.requestFocus();
+    }
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new KhachHangGUI().setVisible(true));

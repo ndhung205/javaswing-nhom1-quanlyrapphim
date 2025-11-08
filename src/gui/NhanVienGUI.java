@@ -120,6 +120,7 @@ public class NhanVienGUI extends JPanel {
                     nv.getNgayVaoLam()
             });
         }
+        clearForm();
     }
 
     private void themNhanVien() {
@@ -193,6 +194,17 @@ public class NhanVienGUI extends JPanel {
         }
         return null;
     }
+    private void clearForm() {
+        txtMaNV.setText("");
+        txtTenNV.setText("");
+        txtSDT.setText("");
+        txtEmail.setText("");
+        txtNgayVaoLam.setText("");
+        cboChucVu.setSelectedIndex(0);
+        table.clearSelection();
+        txtMaNV.requestFocus();
+    }
+
 
     // ===== TEST CHẠY =====
     public static void main(String[] args) {

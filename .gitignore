@@ -1,0 +1,38 @@
+# ===============================
+# Java / Eclipse Project Gitignore
+# ===============================
+
+# Build output
+/bin/
+out/
+build/
+target/
+
+# Java compiled files
+*.class
+
+# Eclipse project settings
+.classpath
+.project
+.settings/
+
+# IntelliJ IDEA (nếu ai dùng)
+.idea/
+*.iml
+
+# VS Code settings
+.vscode/
+
+# MacOS system files
+.DS_Store
+
+# Windows system files
+Thumbs.db
+
+# Logs
+*.log
+
+# ===============================
+# Custom folders you WANT to keep:
+# (img/, lib/, sql/, src/)
+# ===============================

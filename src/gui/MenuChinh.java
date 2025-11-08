@@ -314,8 +314,7 @@ public class MenuChinh extends JFrame {
 	
 	private void openQLTaiKhoanGUI() {
 		mainPanel.removeAll();
-	    //mainPanel.add(new DatVeGUI());
-	    showNotImplemented("Quản lý TaiKhoan - Của Nam");
+	    mainPanel.add(new TaiKhoanGUI());
 	    // cập nhật lại giao diện
 	    mainPanel.revalidate();
 	    mainPanel.repaint();
@@ -323,8 +322,7 @@ public class MenuChinh extends JFrame {
 	
 	private void openQLChucVuGUI() {
 		mainPanel.removeAll();
-	    //mainPanel.add(new DatVeGUI());
-	    showNotImplemented("Quản lý ChucVu - Của Nam");
+	    mainPanel.add(new ChucVuGUI());
 	    // cập nhật lại giao diện
 	    mainPanel.revalidate();
 	    mainPanel.repaint();

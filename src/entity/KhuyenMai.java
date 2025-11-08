@@ -11,6 +11,12 @@ public class KhuyenMai {
 	private Date ngayKT;
 	private String dieuKien;
 	private boolean trangThai;
+	
+	
+	public KhuyenMai(String maKM) {
+		super();
+		this.maKM = maKM;
+	}
 	public KhuyenMai(String maKM, String tenKM, double phanTram, 
 			double soTienGiam, Date ngayBD, Date ngayKT,
 			String dieuKien, boolean trangThai) {

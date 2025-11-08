@@ -8,6 +8,12 @@ public class DatVe {
 	private LocalDateTime ngayDat;
 	private KhachHang khachHang;
 	
+	
+
+	public DatVe(String maDatVe) {
+		this.maDatVe = maDatVe;
+	}
+
 
 	public DatVe(String maDatVe, String trangThai, LocalDateTime ngayDat, KhachHang khachHang) {
 		super();

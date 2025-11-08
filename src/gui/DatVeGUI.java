@@ -42,17 +42,6 @@ import entity.*;
 
 
 /**
- * Giao diện đặt vé của hệ thống quản lý rạp chiếu phim.
- * 
- * Lớp này cho phép người dùng:
- * 
- * Nhập thông tin khách hàng (họ tên, số điện thoại).
- * Chọn phim, phòng chiếu và suất chiếu.
- * Chọn loại ghế, ghế cụ thể và số lượng vé cần đặt.
- * Hiển thị thông tin phim (poster, chi tiết phim,...)
- * Xác nhận hoặc làm mới thông tin đặt vé.
- * 
- * Giao diện được xây dựng bằng các thành phần Swing như JPanel,  JLabel, JComboBox, JTextField, và  JButton.
  * 
  * @author Phạm Tuấn Đạt
  * @version 1.0
@@ -87,7 +76,8 @@ import entity.*;
 	private JButton btnTaoHD;
 	private final Map<String, ImageIcon> cachePoster = new HashMap<>();
 	private JButton btnTim;
-
+	private ArrayList<Ghe> listGheChonTam;
+	private KhachHang khachHang;
 	
  	public DatVeGUI(){
 	    setLayout(new BorderLayout());
@@ -211,10 +201,6 @@ import entity.*;
 	 	setVisible(true);
 	 	
 	}
-	public static void main(String[] args) {
-	    new DatVeGUI();
-		
-	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();
@@ -225,7 +211,7 @@ import entity.*;
 			String tenPhong = (String) cboPhong.getSelectedItem();
 			Phong p = phong.findPhongByTen(tenPhong);
 			if (p != null) {
-			    ChonGheGUI guiGhe =new ChonGheGUI(p, this);
+			    ChonGheGUI guiGhe =new ChonGheGUI(p, listGheChonTam,this);
 			    guiGhe.setVisible(true);
 			}else {
 				JOptionPane.showMessageDialog(this, "Vui lòng chọn phòng hợp lệ!");
@@ -283,25 +269,7 @@ import entity.*;
 	    gbc.gridx = 1;
 	    gbc.weightx = 0.8; 
 	    panel.add(valueLabel, gbc);
-	}
-
-	
-	public void showGhe(ArrayList<String> dsGheChon) {
-		
-		String s = new String();
-		for (String string : dsGheChon) {
-			s += string +", ";
-		}
-		
-		lblListGhe.setEnabled(true);
-		lblListGhe.setText(s);
-		lblListGhe.setEnabled(false);
-		
-		lblSLVe.setEnabled(true);
-		lblSLVe.setText(String.valueOf(dsGheChon.size()));
-		lblSLVe.setEnabled(false);
-	}
-	
+	}	
 	private String[] getDanhSachTenPhong() {
 		List<Phong> listP = phong.getAll();
 		String[] phongItems = new String[listP.size()+1];
@@ -390,17 +358,26 @@ import entity.*;
 	            JOptionPane.showMessageDialog(this, "Vui lòng chọn ghế trước khi đặt vé!");
 	            return;
 	        }
-
-	        KhachHangDAO khDAO = new KhachHangDAO();
+	        
+	        // them khach hang vao sql
 	        String maKH = "KH" + System.currentTimeMillis() % 100000;
-	        KhachHang kh = new KhachHang(maKH, tenKH, sdt);
-	        if(!khDAO.isKhachHangExists(kh)){
-	        	khDAO.addKhachHang(kh);
+	        if(khachHang== null){
+	        	KhachHangDAO khDAO = new KhachHangDAO();
+		        khachHang = new KhachHang(maKH, tenKH, sdt);
+	        	khDAO.addKhachHang(khachHang);
 	        }
+	        
+	        // them cac ghe vao sql
+	        GheDAO gheDAO = new GheDAO();
+	        for (Ghe ghe : listGheChonTam) {
+				if(gheDAO.getById(ghe.getMaGhe()) == null) {
+					gheDAO.insert(ghe);
+				}
+			}
 	        
 
 	        String maDatVe = datve.generateNewId();
-	        DatVe datVe = new DatVe(maDatVe, "Đã xác nhận", LocalDateTime.now(), kh);
+	        DatVe datVe = new DatVe(maDatVe, "Đã xác nhận", LocalDateTime.now(), khachHang);
 	        boolean ok = datve.addDatVe(datVe);
 
 	        if (!ok) {
@@ -450,11 +427,39 @@ import entity.*;
 	        JOptionPane.showMessageDialog(this, "Số điện thoại không hợp lệ!");
 	        return;
 	    }
-		KhachHang kh = khDAO.findKhachHangBySDT(sdt);
-		if(kh == null) {
+		khachHang = khDAO.findKhachHangBySDT(sdt);
+		if(khachHang == null) {
 			JOptionPane.showMessageDialog(this, "Chưa có thông tin của khách hàng này.");
 			return;
 		}
-		txtTenKH.setText(kh.getTenKH());
+		txtTenKH.setText(khachHang.getTenKH());
 	}
+
+	/***
+	 * nhan danh sach ghe ma ban chon tu ChonGheGui
+	 */
+	public void getGheChonTuGUI(ArrayList<Ghe> ghe) {
+		listGheChonTam = ghe;
+		String strMa = new String();
+		String strLoai = new String();
+		for (Ghe g : ghe) {
+			strMa += g.getMaGhe() +", ";
+			if(!strLoai.contains(g.getLoaiGhe().getTenLoaiGhe())) {
+				strLoai += g.getLoaiGhe().getTenLoaiGhe()+", ";
+			}
+		}
+		lblListLoaiGhe.setEnabled(true);
+		lblListLoaiGhe.setText(strLoai);
+		lblListLoaiGhe.setEnabled(false);
+		
+		
+		lblListGhe.setEnabled(true);
+		lblListGhe.setText(strMa);
+		lblListGhe.setEnabled(false);
+		
+		lblSLVe.setEnabled(true);
+		lblSLVe.setText(String.valueOf(ghe.size()));
+		lblSLVe.setEnabled(false);
+	}
+	
 }

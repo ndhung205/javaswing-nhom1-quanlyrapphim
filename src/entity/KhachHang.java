@@ -6,9 +6,13 @@ public class KhachHang {
 	    private String tenKH;
 	    private String soDienThoai;
 	    
-
+	    public KhachHang(String maKH) {this.maKH=maKH;}
 	    public KhachHang() {}
 
+	    public KhachHang(String maKH, String tenKH) {
+	        setMaKH(maKH);
+	        setTenKH(tenKH);
+	    }
 		public KhachHang(String maKH, String tenKH, String soDienThoai) {
 	        setMaKH(maKH);
 	        setTenKH(tenKH);

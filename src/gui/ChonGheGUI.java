@@ -9,6 +9,7 @@ import javax.swing.*;
 import dao.GheDAO;
 import dao.PhongDAO;
 import entity.Ghe;
+import entity.LoaiGhe;
 import entity.Phong;
 /***
  * @author Tuan Dat
@@ -21,13 +22,12 @@ public class ChonGheGUI extends JDialog implements ActionListener {
 	private JButton btnXacNhan;
 	private JButton btnHuy;
 	private GheDAO gheDao;
-	private PhongDAO phong;
-	private ArrayList<String> maGheChon;
+	private ArrayList<Ghe> listGheChonTam, listGheChonTruoc;
 	private DatVeGUI parentFrame;
    
-    public ChonGheGUI(Phong p,DatVeGUI parentFrame) {
-    	this.phong = new PhongDAO();
+    public ChonGheGUI(Phong p, ArrayList<Ghe> gheChonTruoc,DatVeGUI parentFrame) {
     	this.room = p;
+    	this.listGheChonTruoc = (gheChonTruoc != null) ? gheChonTruoc : null;;
     	this.danhSachGhe = new JButton[room.getSoLuongGhe()];
     	this.gheDao = new GheDAO();
     	this.parentFrame = parentFrame;
@@ -106,6 +106,7 @@ public class ChonGheGUI extends JDialog implements ActionListener {
         add(pnlButton, BorderLayout.SOUTH);
 
         setGheTrong();
+        danhDauGheDaChonTruoc();
     }
 
     private JPanel colorBox(Color color, int w, int h) {
@@ -135,10 +136,14 @@ public class ChonGheGUI extends JDialog implements ActionListener {
                 ghe.setFocusPainted(false);
 
                 if (rowChar >= 'C' && rowChar <= 'F') {
-                    ghe.setBackground(new Color(255, 193, 7));
-                    ghe.setToolTipText("Ghế VIP");
+                	if(cot >= 3 && cot <= 8) {
+                		ghe.setBackground(new Color(255, 193, 7));
+                        ghe.setToolTipText("Ghế VIP");
+                	}
+                    
                 } else {
                     ghe.setBackground(Color.LIGHT_GRAY); 
+                    ghe.setToolTipText("Ghế Thường");
                 }
 
                 ghe.addActionListener(this);
@@ -174,19 +179,21 @@ public class ChonGheGUI extends JDialog implements ActionListener {
     }
 
     private void setGheDaChon() {
-    	maGheChon = new ArrayList<String>();
+    	listGheChonTam = new ArrayList<Ghe>();
     	
     	int i =0 ;
-    	for (JButton jButton : danhSachGhe) {
-			if(jButton.getBackground().equals(Color.green)) {
-				maGheChon.add(jButton.getText());
+    	for (JButton btn: danhSachGhe) {
+			if(btn.getBackground().equals(Color.green)) {
+				String loaiGhe = btn.getToolTipText().contains("VIP") ? "VIP":"Thường" ;
+				String maLoai = loaiGhe.equals("VIP") ? "LG02" :"LG01";
+				double phThu =  loaiGhe.equals("VIP") ? 20000 : 0;
+				LoaiGhe lg = new LoaiGhe(maLoai, loaiGhe, phThu, loaiGhe);
+				Ghe ghe = new Ghe(btn.getText(), room, lg, "Đã đặt");
+				listGheChonTam.add(ghe);
 			}
 		}
     }
     
-    public ArrayList<String> getGheDaChon() {
-		return maGheChon;
-	}
     
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -196,12 +203,12 @@ public class ChonGheGUI extends JDialog implements ActionListener {
     		
     	}else if(source.equals(btnXacNhan)) {
     		setGheDaChon();
-    	    if (maGheChon.isEmpty()) {
+    	    if (listGheChonTam.isEmpty()) {
     	        JOptionPane.showMessageDialog(this, "Vui lòng chọn ít nhất một ghế!");
     	        return;
     	    }
     	    if (parentFrame != null) {
-    	        parentFrame.showGhe(maGheChon);
+    	        parentFrame.getGheChonTuGUI(listGheChonTam);
     	    }
     	    dispose();
     		
@@ -220,4 +227,17 @@ public class ChonGheGUI extends JDialog implements ActionListener {
     	}
         
     }
+    private void danhDauGheDaChonTruoc() {
+        if (listGheChonTruoc == null || listGheChonTruoc.isEmpty()) return;
+
+        for (JButton btn : danhSachGhe) {
+            for (Ghe ghe : listGheChonTruoc) {
+                if (btn.getText().equals(ghe.getMaGhe())) {
+                    btn.setBackground(Color.GREEN);
+                    btn.setEnabled(true); 
+                }
+            }
+        }
+    }
+
 }

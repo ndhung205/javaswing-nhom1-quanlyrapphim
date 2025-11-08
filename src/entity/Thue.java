@@ -5,11 +5,14 @@ public class Thue {
 	private String tenThue;
 	private float phanTram;
 	private String moTa;
-	
 	public Thue() {
 		// TODO Auto-generated constructor stub
 	}
 	
+	public Thue(String maThue) {
+		super();
+		this.maThue = maThue;
+	}
 	public Thue(String maThue, String tenThue, float phanTram, String moTa) {
 		super();
 		this.maThue = maThue;
@@ -41,6 +44,5 @@ public class Thue {
 	public void setMaThue(String maThue) {
 		this.maThue = maThue;
 	}
-	
 	
 }

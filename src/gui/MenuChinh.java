@@ -280,8 +280,8 @@ public class MenuChinh extends JFrame {
 	
 	private void openHoaDonGUI() {
 		mainPanel.removeAll();
-	    //mainPanel.add(new DatVeGUI());
-		showNotImplemented("Quản lý hóa đơn - Của Đạt");
+	    mainPanel.add(new HoaDonGUI());
+//		showNotImplemented("Quản lý hóa đơn - Của Đạt");
 	    // cập nhật lại giao diện
 	    mainPanel.revalidate();
 	    mainPanel.repaint();
@@ -298,8 +298,8 @@ public class MenuChinh extends JFrame {
 	
 	private void openKhuyenMaiGUI() {
 		mainPanel.removeAll();
-	    //mainPanel.add(new DatVeGUI());
-		showNotImplemented("Quản lý KhuyenMai - Của Đạt");
+	    mainPanel.add(new KhuyenMaiGUI());
+//		showNotImplemented("Quản lý KhuyenMai - Của Đạt");
 	    // cập nhật lại giao diện
 	    mainPanel.revalidate();
 	    mainPanel.repaint();

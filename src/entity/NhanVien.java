@@ -11,6 +11,10 @@ public class NhanVien {
 	private LocalDate ngayVaoLam;
 
 	public NhanVien() {}
+	public NhanVien(String maNV) {setMaNV(maNV);}
+	public NhanVien(String maNV, String hoTen) {
+		setMaNV(maNV);
+		setHoTen(hoTen);}
 
 	public NhanVien(String maNV, String hoTen, String sDT, String email, ChucVu chucVu, LocalDate ngayVaoLam) {
 		setMaNV(maNV);

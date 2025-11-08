@@ -34,7 +34,7 @@ import entity.KhuyenMai;
 /***
  * @author Tuan Dat
  */
-public class KhuyenMaiGUI extends JFrame implements ActionListener, MouseListener{
+public class KhuyenMaiGUI extends JPanel implements ActionListener, MouseListener{
 	
 	private JTextField txtMa;
 	private JTextField txtTen;
@@ -56,11 +56,9 @@ public class KhuyenMaiGUI extends JFrame implements ActionListener, MouseListene
 
 	public KhuyenMaiGUI() {
 		initComponents();
-		setLocationRelativeTo(null);
 	}
 	private void initComponents() {
 	    setSize(1200, 700);
-	    setDefaultCloseOperation(EXIT_ON_CLOSE);
 	    setLayout(new BorderLayout());
 	    
 	    JPanel pnlTitle = new JPanel();
@@ -211,8 +209,6 @@ public class KhuyenMaiGUI extends JFrame implements ActionListener, MouseListene
 	    ArrayList<KhuyenMai> listKM = kmDAO.getAll();
 	    loadDataOnTable(listKM);
 
-	    setLocationRelativeTo(null);
-	    setVisible(true);
 	}
 
 	
@@ -234,6 +230,7 @@ public class KhuyenMaiGUI extends JFrame implements ActionListener, MouseListene
 			actionTim();
 		}else if(source.equals(btnHienTatCa)) {
 			ArrayList<KhuyenMai> listKM = kmDAO.getAll();
+			modelTableKM.setRowCount(0);
 		    loadDataOnTable(listKM);
 		}
 		
@@ -366,9 +363,10 @@ public class KhuyenMaiGUI extends JFrame implements ActionListener, MouseListene
 			return;
 		}
 		ArrayList<KhuyenMai> km = kmDAO.findKhuyenMaiById(ma);
-		if(km== null) {
-			JOptionPane.showMessageDialog(this, "Không tìm thấy " +ma);return;
+		if(km == null) {
+			JOptionPane.showMessageDialog(this, "Không tìm thấy " + ma);return;
 		}
+		modelTableKM.setRowCount(0);
 		loadDataOnTable(km);
 	}
 }

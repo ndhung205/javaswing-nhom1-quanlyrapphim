@@ -30,7 +30,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.border.Border;
 
 import dao.DatVeDAO;
 import dao.GheDAO;
@@ -47,6 +46,7 @@ import entity.*;
  * @version 1.0
  */
 
+	@SuppressWarnings("serial")
 	public class DatVeGUI extends JPanel implements ActionListener{
 	private JTextField txtTenKH;
 	private JTextField txtSDT;
@@ -211,6 +211,7 @@ import entity.*;
 			String tenPhong = (String) cboPhong.getSelectedItem();
 			Phong p = phong.findPhongByTen(tenPhong);
 			if (p != null) {
+				listGheChonTam = new ArrayList<Ghe>();
 			    ChonGheGUI guiGhe =new ChonGheGUI(p, listGheChonTam,this);
 			    guiGhe.setVisible(true);
 			}else {
@@ -361,11 +362,12 @@ import entity.*;
 	        
 	        // them khach hang vao sql
 	        String maKH = "KH" + System.currentTimeMillis() % 100000;
-	        if(khachHang== null){
-	        	KhachHangDAO khDAO = new KhachHangDAO();
-		        khachHang = new KhachHang(maKH, tenKH, sdt);
-	        	khDAO.addKhachHang(khachHang);
+	        khachHang = khDAO.findKhachHangBySDT(sdt);
+	        if (khachHang == null) {
+	            khachHang = new KhachHang(maKH, tenKH, sdt);
+	            khDAO.addKhachHang(khachHang);
 	        }
+
 	        
 	        // them cac ghe vao sql
 	        GheDAO gheDAO = new GheDAO();
@@ -395,6 +397,7 @@ import entity.*;
 	                + "\nSuất chiếu: " + gioChieu
 	                + "\nGhế: " + lblListGhe.getText()
 	        );
+	        listGheChonTam = null;
 	        actionLamMoiForm();
 
 	    } catch (Exception ex) {

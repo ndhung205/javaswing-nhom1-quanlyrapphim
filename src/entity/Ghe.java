@@ -7,7 +7,8 @@ public class Ghe {
     private String trangThai; // "Trống", "Đã đặt", "Đang sửa"
 
     public Ghe() {}
-
+    public Ghe(String maGhe) {
+        this.maGhe = maGhe;}
     public Ghe(String maGhe, Phong phong, LoaiGhe loaiGhe, String trangThai) {
         this.maGhe = maGhe;
         this.phong = phong;

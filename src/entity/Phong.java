@@ -8,7 +8,7 @@ public class Phong {
     private boolean trangThai; // true = hoạt động, false = bảo trì
 
     public Phong() {}
-
+    public Phong(String maPhong) {this.maPhong = maPhong;}
     public Phong(String maPhong, String tenPhong, int soLuongGhe, 
                  LoaiPhong loaiPhong, boolean trangThai) {
         this.maPhong = maPhong;

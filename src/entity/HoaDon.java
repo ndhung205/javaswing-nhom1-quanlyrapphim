@@ -1,6 +1,7 @@
 package entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class HoaDon {
 	private String maHoaDon;
@@ -13,10 +14,17 @@ public class HoaDon {
 	private PhuongThucThanhToan ptThanhToan;
 	private LocalDateTime ngayThanhToan;
 	private String tinhTrang;
+	private ArrayList<ChiTietHoaDon> listCTHD;
+	
+	public HoaDon(String maHoaDon) {
+		this.maHoaDon = maHoaDon;
+	}
+	
+
+
 	public HoaDon(String maHoaDon, KhachHang khachHang, NhanVien nhanVien, DatVe datVe, LocalDateTime ngayLapHoaDon,
 			Thue thue, KhuyenMai khuyenMai, PhuongThucThanhToan ptThanhToan, LocalDateTime ngayThanhToan,
-			String tinhTrang) {
-		super();
+			String tinhTrang, ArrayList<ChiTietHoaDon> listCTHD) {
 		this.maHoaDon = maHoaDon;
 		this.khachHang = khachHang;
 		this.nhanVien = nhanVien;
@@ -27,6 +35,29 @@ public class HoaDon {
 		this.ptThanhToan = ptThanhToan;
 		this.ngayThanhToan = ngayThanhToan;
 		this.tinhTrang = tinhTrang;
+		this.listCTHD = listCTHD;
+	}
+
+	public HoaDon(String maHoaDon, KhachHang khachHang, NhanVien nhanVien, DatVe datVe, LocalDateTime ngayLapHoaDon,
+			Thue thue, KhuyenMai khuyenMai, PhuongThucThanhToan ptThanhToan, LocalDateTime ngayThanhToan,
+			String tinhTrang) {
+		this.maHoaDon = maHoaDon;
+		this.khachHang = khachHang;
+		this.nhanVien = nhanVien;
+		this.datVe = datVe;
+		this.ngayLapHoaDon = ngayLapHoaDon;
+		this.thue = thue;
+		this.khuyenMai = khuyenMai;
+		this.ptThanhToan = ptThanhToan;
+		this.ngayThanhToan = ngayThanhToan;
+		this.tinhTrang = tinhTrang;
+	}
+	public ArrayList<ChiTietHoaDon> getListCTHD() {
+		return listCTHD;
+	}
+
+	public void setListCTHD(ArrayList<ChiTietHoaDon> listCTHD) {
+		this.listCTHD = listCTHD;
 	}
 	public KhachHang getKhachHang() {
 		return khachHang;
@@ -86,6 +117,16 @@ public class HoaDon {
 		return maHoaDon;
 	}
 	
-	
+	public double tinhThanhTien() {
+	    if (listCTHD == null) return 0;
+
+	    double tong = 0;
+	    for (ChiTietHoaDon ct : listCTHD) {
+			tong += ct.getDonGia();
+		}
+	    tong = tong + tong *thue.getPhanTram() - (khuyenMai.getSoTienGiam()+ khuyenMai.getPhanTram()*tong);
+
+	    return tong;
+	}
 	
 }

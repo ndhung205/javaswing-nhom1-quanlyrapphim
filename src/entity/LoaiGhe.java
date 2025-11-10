@@ -7,7 +7,7 @@ public class LoaiGhe {
     private String moTa;
 
     public LoaiGhe() {}
-
+    public LoaiGhe(String maLoaiGhe) {this.maLoaiGhe = maLoaiGhe;}
     public LoaiGhe(String maLoaiGhe, String tenLoaiGhe, double phuThu, String moTa) {
         this.maLoaiGhe = maLoaiGhe;
         this.tenLoaiGhe = tenLoaiGhe;

@@ -281,7 +281,6 @@ public class MenuChinh extends JFrame {
 	private void openHoaDonGUI() {
 		mainPanel.removeAll();
 	    mainPanel.add(new HoaDonGUI());
-//		showNotImplemented("Quản lý hóa đơn - Của Đạt");
 	    // cập nhật lại giao diện
 	    mainPanel.revalidate();
 	    mainPanel.repaint();
@@ -289,9 +288,8 @@ public class MenuChinh extends JFrame {
 	
 	private void openThongKeGUI() {
 		mainPanel.removeAll();
-	    //mainPanel.add(new DatVeGUI());
-		showNotImplemented("Quản lý thống kê - Của Đạt");
-	    // cập nhật lại giao diện
+	    mainPanel.add(new ThongKeGUI());
+	    
 	    mainPanel.revalidate();
 	    mainPanel.repaint();
 	}

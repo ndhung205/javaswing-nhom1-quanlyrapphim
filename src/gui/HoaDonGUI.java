@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
+@SuppressWarnings("serial")
 public class HoaDonGUI extends JPanel implements ActionListener {
 
     private JTextField txtTimKiem;
@@ -17,7 +18,6 @@ public class HoaDonGUI extends JPanel implements ActionListener {
     private JTable table;
     private DefaultTableModel model;
 	private JButton btnXem;
-	private JButton btnIn;
 	private JButton btnXoa;
 	private HoaDonDAO hoaDonDAO = new HoaDonDAO();
 
@@ -42,17 +42,14 @@ public class HoaDonGUI extends JPanel implements ActionListener {
 
         JPanel pnlBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         btnXem = new JButton("Xem");
-        btnIn = new JButton("In");
         btnXoa = new JButton("Xóa");
         
         pnlBottom.add(btnXem);
-        pnlBottom.add(btnIn);
         pnlBottom.add(btnXoa);
         add(pnlBottom, BorderLayout.SOUTH);
 
         btnTim.addActionListener(this);
         btnXem.addActionListener(this);
-        btnIn.addActionListener(this);
         btnXoa.addActionListener(this);
 
         ArrayList<HoaDon> listHD = hoaDonDAO.getAllHoaDon();
@@ -93,13 +90,6 @@ public class HoaDonGUI extends JPanel implements ActionListener {
             ChiTietHoaDonGUI ctGUI = new ChiTietHoaDonGUI(this, hd);
             ctGUI.setVisible(true);
             
-        } else if (o == btnIn) {
-            if (row == -1) {
-                JOptionPane.showMessageDialog(this, "Vui lòng chọn hóa đơn để in!");
-                return;
-            }
-            String maHD = (String) model.getValueAt(row, 0);
-            JOptionPane.showMessageDialog(this, "In hóa đơn: " + maHD);
         }else if (o == btnXoa) {
             if (row == -1) {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn hóa đơn để xóa!");

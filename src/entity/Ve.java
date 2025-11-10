@@ -11,7 +11,7 @@ public class Ve {
 	
 
 	public Ve() {}
-
+	public Ve(String maVe) {this.maVe = maVe;}
 
 	public Ve(String maVe, double gia, LichChieu lichChieu, Ghe ghe, LocalDateTime thoiGianDat) {
 		super();

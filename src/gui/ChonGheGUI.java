@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import javax.swing.*;
 
 import dao.GheDAO;
-import dao.PhongDAO;
 import entity.Ghe;
 import entity.LoaiGhe;
 import entity.Phong;
 /***
  * @author Tuan Dat
  */
+@SuppressWarnings("serial")
 public class ChonGheGUI extends JDialog implements ActionListener {
 
     // Lưu danh sách ghế
@@ -138,12 +138,12 @@ public class ChonGheGUI extends JDialog implements ActionListener {
                 if (rowChar >= 'C' && rowChar <= 'F') {
                 	if(cot >= 3 && cot <= 8) {
                 		ghe.setBackground(new Color(255, 193, 7));
-                        ghe.setToolTipText("Ghế VIP");
+                        ghe.setToolTipText("VIP");
                 	}
                     
                 } else {
                     ghe.setBackground(Color.LIGHT_GRAY); 
-                    ghe.setToolTipText("Ghế Thường");
+                    ghe.setToolTipText("Thường");
                 }
 
                 ghe.addActionListener(this);
@@ -181,10 +181,17 @@ public class ChonGheGUI extends JDialog implements ActionListener {
     private void setGheDaChon() {
     	listGheChonTam = new ArrayList<Ghe>();
     	
-    	int i =0 ;
     	for (JButton btn: danhSachGhe) {
 			if(btn.getBackground().equals(Color.green)) {
-				String loaiGhe = btn.getToolTipText().contains("VIP") ? "VIP":"Thường" ;
+				String tooltip = btn.getToolTipText();
+				String loaiGhe = null;
+				
+				if(tooltip != null && tooltip.contains("VIP")) {
+				    loaiGhe = "VIP";
+				} else {
+				    loaiGhe = "Thường";
+				}
+
 				String maLoai = loaiGhe.equals("VIP") ? "LG02" :"LG01";
 				double phThu =  loaiGhe.equals("VIP") ? 20000 : 0;
 				LoaiGhe lg = new LoaiGhe(maLoai, loaiGhe, phThu, loaiGhe);

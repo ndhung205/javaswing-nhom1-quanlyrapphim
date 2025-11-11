@@ -151,6 +151,7 @@ public class ChiTietHoaDonDAO {
     		""";
 
         ArrayList<ChiTietHoaDon> cthd = new ArrayList<ChiTietHoaDon>();
+        HoaDonDAO hdDAO = new HoaDonDAO();
 
         try {
             Connection con = DatabaseConnection.getInstance().getConnection();
@@ -159,7 +160,7 @@ public class ChiTietHoaDonDAO {
 
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                HoaDon hd = new HoaDon(rs.getString("maHoaDon"));
+            	HoaDon hd = hdDAO.findHoaDonById(maHoaDon);
                 Phim phim = new Phim(rs.getString("maPhim"),rs.getString("tenPhim"),null,
                         rs.getString("moTa"),rs.getInt("thoiLuongChieu"),rs.getInt("namPhatHanh"),rs.getString("poster")
                 );
@@ -184,9 +185,6 @@ public class ChiTietHoaDonDAO {
                 cthd.add(ct);
             }
 
-            rs.close();
-            con.close();
-            DatabaseConnection.getInstance().disconnect();
         } catch (SQLException e) {
             e.printStackTrace();
         }

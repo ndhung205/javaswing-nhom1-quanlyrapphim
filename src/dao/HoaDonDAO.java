@@ -55,11 +55,11 @@ public class HoaDonDAO {
                     new KhachHang(rs.getString("maKhachHang"), rs.getString("tenKH")),
                     new NhanVien(rs.getString("maNhanVien"), rs.getString("ten")),
                     new DatVe(rs.getString("maDatVe")),
-                    rs.getTimestamp("ngayLapHoaDon").toLocalDateTime(),
+                    rs.getTimestamp("ngayLapHoaDon")!= null ? rs.getTimestamp("ngayLapHoaDon").toLocalDateTime() : LocalDateTime.now(),
                     new Thue(rs.getString("maThue")),
                     new KhuyenMai(rs.getString("maKhuyenMai")),
                     new PhuongThucThanhToan(rs.getString("maPhuongThuc")),
-                    rs.getTimestamp("ngayThanhToan").toLocalDateTime(),
+                    rs.getTimestamp("ngayThanhToan")!= null ? rs.getTimestamp("ngayThanhToan").toLocalDateTime() : LocalDateTime.now(),
                     rs.getString("tinhTrang")
                 );
                 list.add(hd);
@@ -79,10 +79,12 @@ public class HoaDonDAO {
     public HoaDon findHoaDonById(String maHoaDon) {
         HoaDon hd = null;
         String sql = """
-        		SELECT hd.*, kh.maKhachHang, kh.ten as tenKH, nv.* 
+        		SELECT hd.*, kh.maKhachHang, kh.ten as tenKH, nv.*, t.*,km.*
         		FROM HoaDon hd 
         		JOIN KhachHang kh ON kh.maKhachHang = hd.maKhachHang 
         		JOIN NhanVien nv ON nv.maNhanVien = hd.maNhanVien 
+				JOIN Thue t ON t.maThue = hd.maThue
+				JOIN KhuyenMai km ON km.maKhuyenMai=hd.maKhuyenMai
         		WHERE maHoaDon = ?
         		""";
 
@@ -99,18 +101,15 @@ public class HoaDonDAO {
                         new KhachHang(rs.getString("maKhachHang"), rs.getString("tenKH")),
                         new NhanVien(rs.getString("maNhanVien"), rs.getString("ten")),
                         new DatVe(rs.getString("maDatVe")),
-                        rs.getTimestamp("ngayLapHoaDon").toLocalDateTime(),
-                        new Thue(rs.getString("maThue")),
-                        new KhuyenMai(rs.getString("maKhuyenMai")),
+                        rs.getTimestamp("ngayLapHoaDon")!= null ? rs.getTimestamp("ngayLapHoaDon").toLocalDateTime() : LocalDateTime.now(),
+                        new Thue(rs.getString("maThue"), rs.getString("tenThue"), rs.getFloat("phanTram"),rs.getString("moTa")),
+                        new KhuyenMai(rs.getString("maKhuyenMai"), rs.getString("tenKhuyenMai"), rs.getDouble("phanTramGiam"), 
+        						rs.getDouble("soTienGiam"), rs.getDate("ngayBatDau"), rs.getDate("ngayKetThuc"), rs.getString("dieuKien"), rs.getBoolean("trangThai")),
                         new PhuongThucThanhToan(rs.getString("maPhuongThuc")),
-                        rs.getTimestamp("ngayThanhToan").toLocalDateTime(),
+                        rs.getTimestamp("ngayThanhToan")!= null ? rs.getTimestamp("ngayThanhToan").toLocalDateTime() : LocalDateTime.now(),
                         rs.getString("tinhTrang")
                     );
             }
-
-            rs.close();
-            con.close();
-            DatabaseConnection.getInstance().disconnect();
         } catch (SQLException e) {
             e.printStackTrace();
         }

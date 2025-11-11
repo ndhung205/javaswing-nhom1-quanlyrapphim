@@ -28,6 +28,8 @@ public class ChiTietHoaDon {
 	public void setDonGia(double donGia) {
 		this.donGia = donGia;
 	}
-
+	public double tinhThanhTien() {
+		return donGia + hoaDon.tinhTienThue(donGia) - hoaDon.tinhTienKhuyenMai(donGia);
+	}
 	
 }

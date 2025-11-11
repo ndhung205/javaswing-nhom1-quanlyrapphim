@@ -87,6 +87,7 @@ public class HoaDonGUI extends JPanel implements ActionListener {
             JOptionPane.showMessageDialog(this, "Xem chi tiết hóa đơn: " + maHD);
             
             HoaDon hd = hoaDonDAO.findHoaDonById(maHD);
+            System.out.println(hd.getMaHoaDon());
             ChiTietHoaDonGUI ctGUI = new ChiTietHoaDonGUI(this, hd);
             ctGUI.setVisible(true);
             

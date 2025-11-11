@@ -53,6 +53,7 @@ public class ThongKeGUI extends JPanel {
         
         JPanel pnlThongKe = new JPanel(new GridLayout(2, 2, 10, 5));
         pnlThongKe.setBorder(new TitledBorder("Kết quả tổng hợp"));
+        
         pnlThongKe.add(new JLabel("Tổng vé bán:"));
         pnlThongKe.add(lblTongVe = new JLabel("0 vé"));
         pnlThongKe.add(new JLabel("Tổng doanh thu:"));

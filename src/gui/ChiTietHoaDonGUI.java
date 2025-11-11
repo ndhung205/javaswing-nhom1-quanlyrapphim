@@ -5,12 +5,14 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import dao.ChiTietHoaDonDAO;
+import dao.HoaDonDAO;
 import entity.ChiTietHoaDon;
 import entity.HoaDon;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 @SuppressWarnings("serial")
@@ -27,9 +29,10 @@ public class ChiTietHoaDonGUI extends JFrame implements ActionListener {
 	private JLabel lblTongTien;
 	private JLabel lblGiamGia;
 	private JLabel lblVAT;
-	private HoaDon hoaDon;
+	private HoaDon hoaDon = new HoaDon();
 	private HoaDonGUI parent;
 	private ChiTietHoaDonDAO ctDAO = new ChiTietHoaDonDAO();
+	private HoaDonDAO hoaDonDAO = new HoaDonDAO(); 
 
     public ChiTietHoaDonGUI(HoaDonGUI parent, HoaDon hd) {
     	this.hoaDon = hd;
@@ -106,23 +109,26 @@ public class ChiTietHoaDonGUI extends JFrame implements ActionListener {
     	ArrayList<ChiTietHoaDon> listCT = ctDAO.findChiTietHoaDonByMa(hoaDon.getMaHoaDon());
     	int stt = 1;
     	double tongTien = 0;
-    	float thue = 0;
+    	double thue = 0;
     	double giamGia = 0;
+    	
     	for (ChiTietHoaDon chiTietHoaDon : listCT) {
 			String[] row = {stt++ +"",chiTietHoaDon.getVe().getLichChieu().getPhim().getTenPhim(),
 					chiTietHoaDon.getVe().getLichChieu().getGioBatDau().toString(), chiTietHoaDon.getVe().getGhe().getMaGhe(),
-					chiTietHoaDon.getDonGia()+"", chiTietHoaDon.getDonGia()+" VNĐ"};
+					chiTietHoaDon.getDonGia()+"", chiTietHoaDon.tinhThanhTien() +" VNĐ"};
 			
-//			tongTien += chiTietHoaDon.getDonGia();
-//			thue = chiTietHoaDon.getHoaDon().getThue().getPhanTram();
-//			giamGia = chiTietHoaDon.getHoaDon().getKhuyenMai().getPhanTram() !=0 ? chiTietHoaDon.getHoaDon().getKhuyenMai().getPhanTram(): chiTietHoaDon.getHoaDon().getKhuyenMai().getSoTienGiam();
-//			
+			
+			tongTien += chiTietHoaDon.tinhThanhTien();
 			modelChiTiet.addRow(row);
 		}
+    	thue = hoaDon.getThue().getPhanTram();
+    	giamGia = hoaDon.tinhTienKhuyenMai(tongTien);
     	
-    	lblGiamGia.setText("Giảm giá: "+giamGia);
-    	lblVAT.setText("Thuế: " + thue);
-    	lblTongTien.setText("Tổng tiền: "+tongTien);
+    	DecimalFormat dft = new DecimalFormat("#,###.0 VNĐ");
+    	
+    	lblGiamGia.setText("Giảm giá: "+dft.format(giamGia));
+    	lblVAT.setText("Thuế: " + thue +"%");
+    	lblTongTien.setText("Tổng tiền: "+dft.format(tongTien));
     }
 
     @Override

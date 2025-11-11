@@ -34,7 +34,7 @@ public class HoaDonGUI extends JPanel implements ActionListener {
 
         add(pnlTop, BorderLayout.NORTH);
 
-        String[] columns = {"Mã HĐ", "Mã Đặt Vé", "Khách hàng", "Ngày lập", "Tổng tiền", "Trạng thái", "Nhân viên"};
+        String[] columns = {"Mã HĐ", "Mã Đặt Vé", "Khách hàng", "Ngày lập", "Trạng thái", "Nhân viên"};
         model = new DefaultTableModel(columns, 0);
         table = new JTable(model);
         JScrollPane scroll = new JScrollPane(table);
@@ -60,7 +60,7 @@ public class HoaDonGUI extends JPanel implements ActionListener {
     	for(int i=0;i<listHD.size(); i++) {
     		HoaDon hd = listHD.get(i);
     		String[] row = {hd.getMaHoaDon(),hd.getDatVe().getMaDatVe(), hd.getKhachHang().getTenKH(), 
-    				hd.getNgayLapHoaDon().toString(), "1000",hd.getTinhTrang(), hd.getNhanVien().getHoTen()};
+    				hd.getNgayLapHoaDon().toString(),hd.getTinhTrang(), hd.getNhanVien().getHoTen()};
     		model.addRow(row);
     		
     	}

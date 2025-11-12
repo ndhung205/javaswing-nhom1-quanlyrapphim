@@ -236,7 +236,8 @@ public class PhongGUI extends JPanel {
         loc.add(cboLocLoaiPhong);
         
         cboLocTrangThai = new JComboBox<String>();
-        loadTrangThai(cboLocTrangThai);
+        cboLocTrangThai.addItem("Hoạt động");
+        cboLocTrangThai.addItem("Bảo trì");
         cboLocTrangThai.addActionListener(e -> locTrangThai());
         loc.add(cboLocTrangThai);
         
@@ -307,17 +308,6 @@ public class PhongGUI extends JPanel {
                 trangThai
             });
 		}
-	}
-
-	private void loadTrangThai(JComboBox<String> cboLocTrangThai2) {
-		// TODO Auto-generated method stub
-		phongDAO = new PhongDAO();
-		Set<Boolean> list = phongDAO.getTrangThai();
-		
-		for (Boolean boolean1 : list) {
-			cboLocTrangThai2.addItem(boolean1 == true ? "Hoạt động" : "Bảo trì");
-		}
-		
 	}
 
 	private void locLoaiPhong() {

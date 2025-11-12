@@ -10,14 +10,15 @@ import entity.LichChieu;
 import entity.Phim;
 import entity.Phong;
 
+import com.toedter.calendar.JDateChooser;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -33,8 +34,9 @@ public class LichChieuGUI extends JPanel {
     private JTextField txtMaLichChieu;
     private JComboBox<Phim> cboPhim;
     private JComboBox<Phong> cboPhong;
-    private JSpinner spinNgayChieu;
-    private JSpinner spinGioBatDau;
+    private JDateChooser dateNgayChieu;
+    private JSpinner spinGioChieu;
+    private JSpinner spinPhutChieu;
     private JLabel lblGioKetThuc, lblThoiLuong;
     private JButton btnThem, btnSua, btnXoa, btnLamMoi;
     private JComboBox<String> cboFilterNgay;
@@ -154,29 +156,44 @@ public class LichChieuGUI extends JPanel {
         
         row++;
         
-        // Ngày chiếu
+        // Ngày chiếu (JDateChooser)
         gbc.gridx = 0; gbc.gridy = row;
         formFields.add(new JLabel("Ngày chiếu: *"), gbc);
         gbc.gridx = 1;
-        SpinnerDateModel dateModel = new SpinnerDateModel();
-        spinNgayChieu = new JSpinner(dateModel);
-        JSpinner.DateEditor dateEditor = new JSpinner.DateEditor(spinNgayChieu, "dd/MM/yyyy");
-        spinNgayChieu.setEditor(dateEditor);
-        spinNgayChieu.addChangeListener(e -> updateGioKetThuc());
-        formFields.add(spinNgayChieu, gbc);
+        dateNgayChieu = new JDateChooser();
+        dateNgayChieu.setDateFormatString("dd/MM/yyyy");
+        dateNgayChieu.setPreferredSize(new Dimension(200, 25));
+        dateNgayChieu.setMinSelectableDate(new Date()); // Không chọn ngày quá khứ
+        dateNgayChieu.addPropertyChangeListener("date", e -> updateGioKetThuc());
+        formFields.add(dateNgayChieu, gbc);
         
         row++;
         
-        // Giờ bắt đầu
+        // Giờ bắt đầu (Spinner với format HH:mm)
         gbc.gridx = 0; gbc.gridy = row;
         formFields.add(new JLabel("Giờ bắt đầu: *"), gbc);
         gbc.gridx = 1;
-        SpinnerDateModel timeModel = new SpinnerDateModel();
-        spinGioBatDau = new JSpinner(timeModel);
-        JSpinner.DateEditor timeEditor = new JSpinner.DateEditor(spinGioBatDau, "HH:mm");
-        spinGioBatDau.setEditor(timeEditor);
-        spinGioBatDau.addChangeListener(e -> updateGioKetThuc());
-        formFields.add(spinGioBatDau, gbc);
+        
+        JPanel timePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        timePanel.setBackground(Color.WHITE);
+        
+        // Spinner giờ (0-23)
+        SpinnerNumberModel hourModel = new SpinnerNumberModel(14, 0, 23, 1);
+        spinGioChieu = new JSpinner(hourModel);
+        spinGioChieu.setPreferredSize(new Dimension(60, 25));
+        spinGioChieu.addChangeListener(e -> updateGioKetThuc());
+        
+        // Spinner phút (0-59)
+        SpinnerNumberModel minuteModel = new SpinnerNumberModel(0, 0, 59, 5);
+        spinPhutChieu = new JSpinner(minuteModel);
+        spinPhutChieu.setPreferredSize(new Dimension(60, 25));
+        spinPhutChieu.addChangeListener(e -> updateGioKetThuc());
+        
+        timePanel.add(spinGioChieu);
+        timePanel.add(new JLabel(":"));
+        timePanel.add(spinPhutChieu);
+        
+        formFields.add(timePanel, gbc);
         
         row++;
         
@@ -316,7 +333,7 @@ public class LichChieuGUI extends JPanel {
     
     private void loadData() {
         tableModel.setRowCount(0);
-        ArrayList<LichChieu> list = lichChieuDAO.getAllLichChieu();
+        List<LichChieu> list = lichChieuDAO.getAllLichChieu();
         
         for (LichChieu lc : list) {
             tableModel.addRow(new Object[]{
@@ -371,8 +388,10 @@ public class LichChieuGUI extends JPanel {
         lblThoiLuong.setText(phim.getThoiLuongChieu() + " phút");
         
         try {
-            Date dateValue = (Date) spinGioBatDau.getValue();
-            LocalTime gioBatDau = LocalTime.of(dateValue.getHours(), dateValue.getMinutes());
+            int gio = (int) spinGioChieu.getValue();
+            int phut = (int) spinPhutChieu.getValue();
+            
+            LocalTime gioBatDau = LocalTime.of(gio, phut);
             LocalTime gioKetThuc = gioBatDau.plusMinutes(phim.getThoiLuongChieu());
             
             lblGioKetThuc.setText(gioKetThuc.format(timeFormatter));
@@ -407,12 +426,13 @@ public class LichChieuGUI extends JPanel {
                 }
             }
             
-            spinNgayChieu.setValue(java.sql.Date.valueOf(lc.getNgayChieu()));
+            // Set ngày chiếu (JDateChooser)
+            Date ngayChieu = Date.from(lc.getNgayChieu().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            dateNgayChieu.setDate(ngayChieu);
             
-            java.util.Date timeValue = java.util.Date.from(
-                lc.getGioBatDau().atZone(java.time.ZoneId.systemDefault()).toInstant()
-            );
-            spinGioBatDau.setValue(timeValue);
+            // Set giờ bắt đầu
+            spinGioChieu.setValue(lc.getGioBatDau().getHour());
+            spinPhutChieu.setValue(lc.getGioBatDau().getMinute());
             
             updateGioKetThuc();
             currentMode = "EDIT";
@@ -512,6 +532,11 @@ public class LichChieuGUI extends JPanel {
             return false;
         }
         
+        if (dateNgayChieu.getDate() == null) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn ngày chiếu!");
+            return false;
+        }
+        
         return true;
     }
     
@@ -519,15 +544,17 @@ public class LichChieuGUI extends JPanel {
         Phim phim = (Phim) cboPhim.getSelectedItem();
         Phong phong = (Phong) cboPhong.getSelectedItem();
         
-        Date dateValue = (Date) spinNgayChieu.getValue();
-        LocalDate ngayChieu = LocalDate.of(
-            dateValue.getYear() + 1900,
-            dateValue.getMonth() + 1,
-            dateValue.getDate()
-        );
+        // Lấy ngày từ JDateChooser
+        Date selectedDate = dateNgayChieu.getDate();
+        LocalDate ngayChieu = selectedDate.toInstant()
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate();
         
-        Date timeValue = (Date) spinGioBatDau.getValue();
-        LocalTime gioBatDau = LocalTime.of(timeValue.getHours(), timeValue.getMinutes());
+        // Lấy giờ phút từ spinner
+        int gio = (int) spinGioChieu.getValue();
+        int phut = (int) spinPhutChieu.getValue();
+        LocalTime gioBatDau = LocalTime.of(gio, phut);
+        
         LocalDateTime gioBatDauFull = LocalDateTime.of(ngayChieu, gioBatDau);
         LocalDateTime gioKetThucFull = gioBatDauFull.plusMinutes(phim.getThoiLuongChieu());
         
@@ -548,13 +575,21 @@ public class LichChieuGUI extends JPanel {
         
         cboPhim.setSelectedIndex(0);
         cboPhong.setSelectedIndex(0);
-        spinNgayChieu.setValue(new Date());
-        spinGioBatDau.setValue(new Date());
+        dateNgayChieu.setDate(new Date()); // Hôm nay
+        spinGioChieu.setValue(14); // 14:00
+        spinPhutChieu.setValue(0);
         
         lblGioKetThuc.setText("--:--");
         lblThoiLuong.setText("-- phút");
         
         currentMode = "ADD";
         txtMaLichChieu.requestFocus();
+    }
+    
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            LichChieuGUI gui = new LichChieuGUI();
+            gui.setVisible(true);
+        });
     }
 }

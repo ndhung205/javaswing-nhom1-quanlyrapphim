@@ -20,7 +20,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import entity.Ghe;
 // Các import DAO này có thể bạn chưa dùng, nhưng cứ để
 // import dao.DatVeDAO;
 // import dao.PhimDAO;

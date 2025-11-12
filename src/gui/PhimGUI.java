@@ -372,8 +372,8 @@ public class PhimGUI extends JPanel {
 		tableModel.setRowCount(0);
 		for (Phim phim : list) {
 			tableModel.addRow(new Object[] {
-					phim.getMaPhim(), phim.getTenPhim(), phim.getLoaiPhim().getTenLoaiPhim(), phim.getThoiLuongChieu(), phim.getNamPhatHanh(), phim.getMoTa()
-			});
+					phim.getMaPhim(), phim.getTenPhim(), phim.getLoaiPhim().getTenLoaiPhim(), phim.getThoiLuongChieu(), phim.getNamPhatHanh(), phim.getMoTa(), phim.getPoster()			
+					});
 		}		
 	}
     
@@ -549,6 +549,12 @@ public class PhimGUI extends JPanel {
     }
     
     private boolean validateForm() {
+    	if (txtMaPhim.getText().trim().isEmpty()) {
+    		JOptionPane.showMessageDialog(this, "Vui lòng nhập mã phim!");
+            txtMaPhim.requestFocus();
+            return false;
+    	}
+    	
         if (txtTenPhim.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập tên phim!");
             txtTenPhim.requestFocus();

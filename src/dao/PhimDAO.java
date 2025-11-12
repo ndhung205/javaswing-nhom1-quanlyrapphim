@@ -194,7 +194,7 @@ public class PhimDAO {
 	    String sql = "SELECT p.maPhim, p.tenPhim, p.moTa, p.thoiLuongChieu, p.namPhatHanh, p.poster, " +
 	                 "p.maLoaiPhim, lp.tenLoaiPhim " +
 	                 "FROM Phim p " +
-	                 "LEFT JOIN LoaiPhim lp ON p.maLoaiPhim = lp.maLoaiPhim " +
+	                 "JOIN LoaiPhim lp ON p.maLoaiPhim = lp.maLoaiPhim " +
 	                 "WHERE p.tenPhim LIKE ? OR p.moTa LIKE ? " +
 	                 "ORDER BY p.tenPhim";
 
@@ -292,14 +292,14 @@ public class PhimDAO {
     }
 
     public List<Phim> getByNam(Integer nam) {
-        List<Phim> list = new ArrayList<>();
+        List<Phim> list = new ArrayList<Phim>();
 
         String sql = """
             SELECT p.maPhim, p.tenPhim, p.moTa AS moTaPhim, 
                    p.thoiLuongChieu, p.namPhatHanh, p.poster,
-                   lp.maLoaiPhim, lp.tenLoaiPhim, lp.moTa AS moTaLoaiPhim
+                   lp.maLoaiPhim, lp.tenLoaiPhim
             FROM Phim p
-            LEFT JOIN LoaiPhim lp ON p.maLoaiPhim = lp.maLoaiPhim
+            JOIN LoaiPhim lp ON p.maLoaiPhim = lp.maLoaiPhim
             WHERE p.namPhatHanh = ?
             ORDER BY p.maPhim
         """;

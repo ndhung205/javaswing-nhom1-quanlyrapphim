@@ -7,12 +7,22 @@ public class Ve {
 	private double gia;
 	private LichChieu lichChieu;
 	private Ghe ghe;
+	private DatVe datVe;
 	private LocalDateTime thoiGianDat;
 	
 
 	public Ve() {}
 	public Ve(String maVe) {this.maVe = maVe;}
 
+	public Ve(String maVe, double gia, LichChieu lichChieu, Ghe ghe, DatVe datVe, LocalDateTime thoiGianDat) {
+		super();
+		this.maVe = maVe;
+		this.gia = gia;
+		this.lichChieu = lichChieu;
+		this.ghe = ghe;
+		this.datVe = datVe;
+		this.thoiGianDat = thoiGianDat;
+	}
 	public Ve(String maVe, double gia, LichChieu lichChieu, Ghe ghe, LocalDateTime thoiGianDat) {
 		super();
 		this.maVe = maVe;
@@ -23,6 +33,12 @@ public class Ve {
 	}
 
 
+	public DatVe getDatVe() {
+		return datVe;
+	}
+	public void setDatVe(DatVe datVe) {
+		this.datVe = datVe;
+	}
 	public double getGia() {
 		return gia;
 	}

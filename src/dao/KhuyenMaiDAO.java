@@ -99,14 +99,15 @@ public class KhuyenMaiDAO {
 		return n>0;
 	}
 	 
-	 public ArrayList<KhuyenMai> findKhuyenMaiById(String id) {
-		ArrayList<KhuyenMai> list = getAll();
-		String sql = "SELECT * FROM KhuyenMai WHERE maKhuyenMai = ? ";
+	 public ArrayList<KhuyenMai> findKhuyenMaiById(String keyWord) {
+		ArrayList<KhuyenMai> list = new ArrayList<KhuyenMai>();
+		String sql = "SELECT * FROM KhuyenMai WHERE maKhuyenMai LIKE ? OR tenKhuyenMai LIKE ?";
 		
 		try {
 			 Connection con = DatabaseConnection.getInstance().getConnection();
 			 PreparedStatement stmt = con.prepareStatement(sql);
-			 stmt.setString(1,id);
+			 stmt.setString(1,"%"+keyWord+"%");
+			 stmt.setString(2,"%"+keyWord+"%");
 			 ResultSet rs = stmt.executeQuery();
 			 
 			 while(rs.next()) {

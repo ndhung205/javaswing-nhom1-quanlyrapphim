@@ -83,11 +83,13 @@ public class HoaDonGUI extends JPanel implements ActionListener {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn hóa đơn cần xem!");
                 return;
             }
-            String maHD = model.getValueAt(row, 0).toString();
-            JOptionPane.showMessageDialog(this, "Xem chi tiết hóa đơn: " + maHD);
-            
+            String maHD = model.getValueAt(row, 0).toString();         
             HoaDon hd = hoaDonDAO.findHoaDonById(maHD);
-            System.out.println(hd.getMaHoaDon());
+            if (hd == null) {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy hóa đơn có mã: " + maHD);
+                return;
+            }
+
             ChiTietHoaDonGUI ctGUI = new ChiTietHoaDonGUI(this, hd);
             ctGUI.setVisible(true);
             

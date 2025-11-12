@@ -83,8 +83,8 @@ public class HoaDonDAO {
         		FROM HoaDon hd 
         		JOIN KhachHang kh ON kh.maKhachHang = hd.maKhachHang 
         		JOIN NhanVien nv ON nv.maNhanVien = hd.maNhanVien 
-				JOIN Thue t ON t.maThue = hd.maThue
-				JOIN KhuyenMai km ON km.maKhuyenMai=hd.maKhuyenMai
+				LEFT JOIN Thue t ON t.maThue = hd.maThue
+				LEFT JOIN KhuyenMai km ON km.maKhuyenMai=hd.maKhuyenMai
         		WHERE maHoaDon = ?
         		""";
 

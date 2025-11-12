@@ -505,4 +505,31 @@ public class LichChieuDAO {
 		
 		System.out.println(lichChieuDAO.getByNgay(LocalDate.now()));
 	}
+    public List<LichChieu> getLichChieuTheoPhong(String maPhong) {
+        List<LichChieu> list = new ArrayList<>();
+        String sql = """
+            SELECT *
+            FROM LichChieu lc
+            JOIN Phim p ON lc.maPhim = p.maPhim
+            JOIN Phong ph ON lc.maPhong = ph.maPhong
+            WHERE lc.maPhong = ?
+            ORDER BY lc.ngayChieu, lc.gioBatDau
+        """;
+
+        try {
+        	Connection con = DatabaseConnection.getInstance().getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, maPhong);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                LichChieu lc = createLichChieuFromResultSet(rs);
+                list.add(lc);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
 }

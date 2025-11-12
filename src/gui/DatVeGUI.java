@@ -37,6 +37,7 @@ import dao.KhachHangDAO;
 import dao.LichChieuDAO;
 import dao.PhimDAO;
 import dao.PhongDAO;
+import dao.VeDAO;
 import entity.*;
 
 
@@ -67,6 +68,7 @@ import entity.*;
 	private JLabel lblThoiLuong;
 	private static final int WIDTH = 1200, HEIGHT = 700;
 	private DatVeDAO datve = new DatVeDAO();
+	private  VeDAO veDAO = new VeDAO();
 	private PhongDAO phong =new PhongDAO();
 	private PhimDAO phim = new PhimDAO();
 	private JLabel lblTheLoai;
@@ -126,11 +128,10 @@ import entity.*;
 		pnlChonPhim.setLayout(new GridLayout(4, 2, 5, 5));
 		pnlChonPhim.add(new JLabel("Phim: (*)"));pnlChonPhim.add(cboPhim= new JComboBox<String>(getDanhSachTenPhim()));
 		pnlChonPhim.add(new JLabel("Phòng:(*)"));pnlChonPhim.add(cboPhong= new JComboBox<String>(getDanhSachTenPhong()));
-		pnlChonPhim.add(new JLabel("Lịch chiếu:(*)"));pnlChonPhim.add(cboLichChieu= new JComboBox<String>(getDanhSachTenLichChieu()));
+		pnlChonPhim.add(new JLabel("Lịch chiếu:(*)"));pnlChonPhim.add(cboLichChieu= new JComboBox<String>());
+		cboLichChieu.addItem("--------------------------- Lịch Chiếu ---------------------------------");
 		
-		cboLichChieu.setEditable(true);
 		cboPhim.setEditable(true);
-		cboPhong.setEditable(true);
 		
 		
 		JPanel pnlChonGhe = new JPanel();
@@ -192,6 +193,7 @@ import entity.*;
 		cboPhim.addActionListener(this);
 		btnTim.addActionListener(this);
 		btnTaoHD.setEnabled(false);
+		cboPhong.addActionListener(this);
 
 		
 		add(pnlLeftContainer, BorderLayout.CENTER);
@@ -211,7 +213,6 @@ import entity.*;
 			String tenPhong = (String) cboPhong.getSelectedItem();
 			Phong p = phong.findPhongByTen(tenPhong);
 			if (p != null) {
-				listGheChonTam = new ArrayList<Ghe>();
 			    ChonGheGUI guiGhe =new ChonGheGUI(p, listGheChonTam,this);
 			    guiGhe.setVisible(true);
 			}else {
@@ -226,6 +227,11 @@ import entity.*;
 			actionLamMoiForm();
 		}else if(source.equals(btnTim)) {
 			actionTim();
+		}else if(source.equals(cboPhong)) {
+			if(cboPhong.getSelectedItem().toString().contains("-- Phòng --")) {
+				return;
+			}
+			actionCapNhatLichChieuTheoPhong();
 		}
 		
 	}
@@ -289,15 +295,7 @@ import entity.*;
 		}
 		return phimItems;
 	}
-	private String[] getDanhSachTenLichChieu() {
-		ArrayList<LichChieu> lc = lichChieu.getAllLichChieu();
-		String[] lichItems = new String[lc.size()+1];
-		lichItems[0] = "--------------------------- Lịch Chiếu ---------------------------------";
-		for(int i=0; i<lc.size(); i++) {
-			lichItems[i+1] = lc.get(i).getGioBatDau().toString();
-		}
-		return lichItems;
-	}
+
 
 
 	/**
@@ -376,7 +374,8 @@ import entity.*;
 					gheDAO.insert(ghe);
 				}
 			}
-	        
+	        Phong p = phong.findPhongByTen(tenPhong);
+	        LichChieu lc = lichChieu.findByPhongAndTime(p.getMaPhong(), cboLichChieu.getSelectedItem().toString()); 
 
 	        String maDatVe = datve.generateNewId();
 	        DatVe datVe = new DatVe(maDatVe, "Đã xác nhận", LocalDateTime.now(), khachHang);
@@ -387,6 +386,12 @@ import entity.*;
 	            khDAO.removeKhachHang(maKH);
 	            return;
 	        }
+	        
+			for(Ghe g : listGheChonTam) {
+				String maVe = "V"+System.currentTimeMillis() % 100000;
+				Ve v = new Ve(maVe, g.getLoaiGhe().getTenLoaiGhe().equalsIgnoreCase("Thường")? 80000: 100000, lc, g, datVe,LocalDateTime.now());
+				veDAO.addVe(v);
+			}
 
 	        JOptionPane.showMessageDialog(this,
 	                "✅ Đặt vé thành công!\n"
@@ -398,7 +403,6 @@ import entity.*;
 	                + "\nGhế: " + lblListGhe.getText()
 	        );
 	        listGheChonTam = null;
-	        actionLamMoiForm();
 
 	    } catch (Exception ex) {
 	        ex.printStackTrace();
@@ -465,4 +469,29 @@ import entity.*;
 		lblSLVe.setEnabled(false);
 	}
 	
+	private void actionCapNhatLichChieuTheoPhong() {
+	    String tenPhong = (String) cboPhong.getSelectedItem();
+	    if (tenPhong == null) {
+	        cboLichChieu.removeAllItems();
+	        cboLichChieu.addItem("--------------------------- Lịch Chiếu ---------------------------------");
+	        return;
+	    }
+	    Phong p = phong.findPhongByTen(tenPhong);
+	    if (p == null) {
+	        JOptionPane.showMessageDialog(this, "Không tìm thấy thông tin phòng!");
+	        return;
+	    }
+
+	    // Lấy danh sách lịch chiếu theo phòng
+	    List<LichChieu> listLC = lichChieu.getLichChieuTheoPhong(p.getMaPhong());
+
+	    cboLichChieu.removeAllItems();
+	    cboLichChieu.addItem("--------------------------- Lịch Chiếu ---------------------------------");
+
+	    for (LichChieu lc : listLC) {
+	        String item = lc.getGioBatDau().toString();
+	        cboLichChieu.addItem(item);
+	    }
+	}
+
 }

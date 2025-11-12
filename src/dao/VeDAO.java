@@ -39,7 +39,7 @@ public class VeDAO {
 
     // Thêm vé mới
     public boolean addVe(Ve ve) {
-        String sql = "INSERT INTO Ve (maVe, gia, trangThai, thoiGianDat) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Ve (maVe, gia, maLichChieu,maGhe, maDatVe,trangThai, thoiGianDat) VALUES (?, ?, ?, ?, ?,?,?)";
         int n = 0;
 
         try (Connection con = DatabaseConnection.getInstance().getConnection();
@@ -47,8 +47,11 @@ public class VeDAO {
 
             stmt.setString(1, ve.getMaVe());
             stmt.setDouble(2, ve.getGia());
-            stmt.setString(3, null);
-            stmt.setTimestamp(4, Timestamp.valueOf(ve.getThoiGianDat()));
+            stmt.setString(3, ve.getLichChieu().getMaLichChieu());
+            stmt.setString(4, ve.getGhe().getMaGhe());
+            stmt.setString(5, ve.getDatVe().getMaDatVe());
+            stmt.setString(6, "Đã đặt");
+            stmt.setTimestamp(7, Timestamp.valueOf(ve.getThoiGianDat()));
 
             n = stmt.executeUpdate();
 
@@ -144,6 +147,77 @@ public class VeDAO {
         }
 
         return list;
+    }
+
+    public Ve findVeById(String maVe) {
+        Ve ve = null;
+        String sql = """
+            SELECT v.*, g.*, lg.*, p.*, lc.*
+            FROM Ve v
+            JOIN Ghe g ON g.maGhe = v.maGhe
+            JOIN LoaiGhe lg ON lg.maLoaiGhe = g.maLoaiGhe
+            JOIN LichChieu lc ON lc.maLichChieu = v.maLichChieu
+            JOIN Phim p ON p.maPhim = lc.maPhim
+            WHERE v.maVe = ?
+        """;
+
+        try (Connection con = DatabaseConnection.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+
+            stmt.setString(1, maVe);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Phim phim = new Phim(
+                            rs.getString("maPhim"),
+                            rs.getString("tenPhim"),
+                            null,
+                            rs.getString("moTa"),
+                            rs.getInt("thoiLuongChieu"),
+                            rs.getInt("namPhatHanh"),
+                            rs.getString("poster")
+                    );
+
+                    LocalDate ngayChieu = rs.getDate("ngayChieu").toLocalDate();
+                    LocalDateTime gioBatDau = rs.getTimestamp("gioBatDau").toLocalDateTime();
+                    LocalDateTime gioKetThuc = rs.getTimestamp("gioKetThuc").toLocalDateTime();
+                    LichChieu lichChieu = new LichChieu(
+                            rs.getString("maLichChieu"),
+                            phim,
+                            new Phong(rs.getString("maPhong")),
+                            ngayChieu,
+                            gioBatDau,
+                            gioKetThuc
+                    );
+
+                    LoaiGhe loaiGhe = new LoaiGhe(
+                            rs.getString("maLoaiGhe"),
+                            rs.getString("tenLoaiGhe"),
+                            rs.getDouble("phuThu"),
+                            rs.getString("moTa")
+                    );
+
+                    Ghe ghe = new Ghe(
+                            rs.getString("maGhe"),
+                            new Phong(rs.getString("maPhong")),
+                            loaiGhe,
+                            rs.getString("trangThai")
+                    );
+
+                    ve = new Ve(
+                            rs.getString("maVe"),
+                            rs.getDouble("gia"),
+                            lichChieu,
+                            ghe,
+                            rs.getTimestamp("thoiGianDat").toLocalDateTime()
+                    );
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return ve;
     }
 
 

@@ -200,6 +200,7 @@ public class ChonGheGUI extends JDialog implements ActionListener {
 			}
 		}
     }
+
     
     
     @Override

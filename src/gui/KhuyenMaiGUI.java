@@ -176,7 +176,7 @@ public class KhuyenMaiGUI extends JPanel implements ActionListener, MouseListene
 	    pnlTimKiem.add(btnHienTatCa = new JButton("Hiện tất cả"));
 	    
 	    btnTim.addActionListener(this);
-	    btnTim.addActionListener(this);
+	    btnHienTatCa.addActionListener(this);
 	    
 	    btnTim.setBackground(new Color(41, 128, 185));
 	    btnHienTatCa.setBackground(new Color(155, 89, 182));
@@ -228,7 +228,6 @@ public class KhuyenMaiGUI extends JPanel implements ActionListener, MouseListene
 			actionTim();
 		}else if(source.equals(btnHienTatCa)) {
 			ArrayList<KhuyenMai> listKM = kmDAO.getAll();
-			modelTableKM.setRowCount(0);
 		    loadDataOnTable(listKM);
 		}
 		
@@ -361,10 +360,10 @@ public class KhuyenMaiGUI extends JPanel implements ActionListener, MouseListene
 			return;
 		}
 		ArrayList<KhuyenMai> km = kmDAO.findKhuyenMaiById(ma);
-		if(km == null) {
+		modelTableKM.setRowCount(0);
+		if(km == null | km.isEmpty()) {
 			JOptionPane.showMessageDialog(this, "Không tìm thấy " + ma);return;
 		}
-		modelTableKM.setRowCount(0);
 		loadDataOnTable(km);
 	}
 }

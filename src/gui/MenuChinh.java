@@ -4,12 +4,15 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.util.List;
 
 import javax.swing.Box;
+import javax.swing.ImageIcon;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -184,46 +187,35 @@ public class MenuChinh extends JFrame {
 		itemDangXuat.addActionListener(e -> logout());
 		menuHeThong.add(itemDangXuat);
 
-		menuBar.add(menuHeThong); // Thêm menu Hệ thống vào
+		menuBar.add(menuHeThong);
 
-		// <-- THAY ĐỔI 3: THÊM 2 DÒNG NÀY ĐỂ HIỂN THỊ TÊN BÊN PHẢI -->
-		
-		// 1. Thêm một "lò xo" vô hình để đẩy mọi thứ sang phải
 		menuBar.add(Box.createHorizontalGlue());
 
-		// 2. Thêm JLabel với thông tin người dùng (thêm 2 dấu cách cuối cho đẹp)
 		JLabel lblUserInfo = new JLabel("Chào, " + currentUsername + " (" + currentUserRole + ")  ");
 		lblUserInfo.setFont(new Font("Arial", Font.BOLD, 15));
 		menuBar.add(lblUserInfo);
 				
-		// <-- KẾT THÚC THAY ĐỔI 3 -->
-		
 		setJMenuBar(menuBar);
 	}
 
 	private JPanel createWelcomePanel() {
-		JPanel panel = new JPanel(new GridBagLayout());
-		panel.setBackground(Color.WHITE);
+	    // Tạo JPanel tùy chỉnh có ảnh nền
+	    JPanel panel = new JPanel(new GridBagLayout()) {
+	        private Image backgroundImage = new ImageIcon("img/background/backgr.png").getImage(); 
 
-		JLabel lblWelcome = new JLabel("Chào mừng đến với Hệ thống Quản lý Rạp Chiếu Phim");
-		lblWelcome.setFont(new Font("Arial", Font.BOLD, 24));
-		lblWelcome.setForeground(new Color(51, 51, 51));
+	        @Override
+	        protected void paintComponent(Graphics g) {
+	            super.paintComponent(g);
+	            // Vẽ ảnh phủ toàn bộ panel
+	            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+	        }
+	    };
 
-		JLabel lblVersion = new JLabel("Version 1.0 - Module Hùng: Phim, Phòng, Ghế, Lịch chiếu");
-		lblVersion.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblVersion.setForeground(Color.GRAY);
-
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		gbc.insets = new Insets(10, 10, 10, 10);
-		panel.add(lblWelcome, gbc);
-
-		gbc.gridy = 1;
-		panel.add(lblVersion, gbc);
-
-		return panel;
+	    panel.setOpaque(false); // Đảm bảo nền trong suốt (cho ảnh hiển thị)
+	    
+	    return panel;
 	}
+
 
 	// ========== ACTION HANDLERS - MODULE HÙNG ==========
 

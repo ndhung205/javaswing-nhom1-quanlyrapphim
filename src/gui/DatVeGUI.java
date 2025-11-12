@@ -75,7 +75,6 @@ import entity.*;
 	private LichChieuDAO lichChieu = new LichChieuDAO();
 	private KhachHangDAO khDAO = new KhachHangDAO();
 	private JLabel lblNamXB;
-	private JButton btnTaoHD;
 	private final Map<String, ImageIcon> cachePoster = new HashMap<>();
 	private JButton btnTim;
 	private ArrayList<Ghe> listGheChonTam;
@@ -159,15 +158,12 @@ import entity.*;
 		
 		pnlButton.add(btnLamMoi= new JButton("Làm mới"));
 		pnlButton.add(btnXacNhanDatVe= new JButton("Xác nhận đặt vé"));
-		pnlButton.add(btnTaoHD = new JButton("In vé"));
 		
 		btnLamMoi.setBackground(new Color(46, 204, 113));
 		btnXacNhanDatVe.setBackground(new Color(52, 152, 219));
-		btnTaoHD.setBackground(new Color(241, 196, 15));
 		btnTim.setBackground(new Color(30, 144, 255));
 		btnLamMoi.setForeground(Color.white);
 		btnXacNhanDatVe.setForeground(Color.white);
-		btnTaoHD.setForeground(Color.white);
 		btnTim.setForeground(Color.WHITE);
 		
 		
@@ -189,10 +185,8 @@ import entity.*;
 		btnChonGhe.addActionListener(this);
 		btnLamMoi.addActionListener(this);
 		btnXacNhanDatVe.addActionListener(this);
-		btnTaoHD.addActionListener(this);
 		cboPhim.addActionListener(this);
 		btnTim.addActionListener(this);
-		btnTaoHD.setEnabled(false);
 		cboPhong.addActionListener(this);
 
 		

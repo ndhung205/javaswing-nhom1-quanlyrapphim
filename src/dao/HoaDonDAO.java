@@ -116,6 +116,47 @@ public class HoaDonDAO {
 
         return hd;
     }
+    // tim hoa don theo ten khach hang
+	    public HoaDon findHoaDonByTenKhachHang(String tenKH) {
+	        HoaDon hd = null;
+	        String sql = """
+	        		SELECT hd.*, kh.maKhachHang, kh.ten as tenKH, nv.*, t.*,km.*
+	        		FROM HoaDon hd 
+	        		JOIN KhachHang kh ON kh.maKhachHang = hd.maKhachHang 
+	        		JOIN NhanVien nv ON nv.maNhanVien = hd.maNhanVien 
+					LEFT JOIN Thue t ON t.maThue = hd.maThue
+					LEFT JOIN KhuyenMai km ON km.maKhuyenMai=hd.maKhuyenMai
+	        		WHERE kh.ten = ?
+	        		""";
+	
+	
+	        try {
+	            Connection con = DatabaseConnection.getInstance().getConnection();
+	            PreparedStatement stmt = con.prepareStatement(sql);
+	            stmt.setString(1, tenKH);
+	            ResultSet rs = stmt.executeQuery();
+	
+	            if (rs.next()) {
+	            	hd = new HoaDon(
+	                        rs.getString("maHoaDon"),
+	                        new KhachHang(rs.getString("maKhachHang"), rs.getString("tenKH")),
+	                        new NhanVien(rs.getString("maNhanVien"), rs.getString("ten")),
+	                        new DatVe(rs.getString("maDatVe")),
+	                        rs.getTimestamp("ngayLapHoaDon")!= null ? rs.getTimestamp("ngayLapHoaDon").toLocalDateTime() : LocalDateTime.now(),
+	                        new Thue(rs.getString("maThue"), rs.getString("tenThue"), rs.getFloat("phanTram"),rs.getString("moTa")),
+	                        new KhuyenMai(rs.getString("maKhuyenMai"), rs.getString("tenKhuyenMai"), rs.getDouble("phanTramGiam"), 
+	        						rs.getDouble("soTienGiam"), rs.getDate("ngayBatDau"), rs.getDate("ngayKetThuc"), rs.getString("dieuKien"), rs.getBoolean("trangThai")),
+	                        new PhuongThucThanhToan(rs.getString("maPhuongThuc")),
+	                        rs.getTimestamp("ngayThanhToan")!= null ? rs.getTimestamp("ngayThanhToan").toLocalDateTime() : LocalDateTime.now(),
+	                        rs.getString("tinhTrang")
+	                    );
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	
+	        return hd;   
+	}
 
     // cap nhat
     public boolean updateHoaDon(HoaDon hd) {

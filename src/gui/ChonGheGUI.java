@@ -156,7 +156,7 @@ public class ChonGheGUI extends JDialog implements ActionListener {
     }
 
     private void setGheTrong() {
-        ArrayList<Ghe> listGheDat = gheDao.getAllGhe();
+    	ArrayList<Ghe> listGheDat = gheDao.findGheByPhong(room.getMaPhong());
 
         for (JButton btnGhe : danhSachGhe) {
             String maGhe = btnGhe.getText();

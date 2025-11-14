@@ -137,4 +137,22 @@ public class PhuongThucThanhToanDAO {
 		}
 		return pttt;
 	}
+	public PhuongThucThanhToan findPTTTByTen(String ten) {
+		String sql = "SELECT * FROM PhuongThucThanhToan WHERE tenPhuongThuc=?";
+		PhuongThucThanhToan pttt = null;
+		try (Connection conn = DatabaseConnection.getInstance().getConnection();
+				PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setString(1, ten);
+			ResultSet rs = stmt.executeQuery();
+			if (rs.next()) {
+				pttt = new PhuongThucThanhToan(
+						rs.getString("maPhuongThuc"), 
+						rs.getString("tenPhuongThuc"),
+						rs.getString("moTa"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return pttt;
+	}
 }

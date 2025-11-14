@@ -73,7 +73,17 @@ public class HoaDonGUI extends JPanel implements ActionListener {
 
         if (o == btnTim) {
             ArrayList<HoaDon> listHD = new ArrayList<HoaDon>();
-            HoaDon hd =	hoaDonDAO.findHoaDonById(txtTimKiem.getText().trim());
+            String tenKH = txtTimKiem.getText().trim();
+            if(tenKH.isEmpty()) {
+            	JOptionPane.showMessageDialog(this, "Vui lòng nhập tên khách hàng vào ô tìm kiếm");
+            	txtTimKiem.requestFocus();
+            	return;
+            }
+            HoaDon hd =	hoaDonDAO.findHoaDonByTenKhachHang(tenKH);
+            if(hd== null) {
+            	JOptionPane.showMessageDialog(this, "Không tìm thấy khách hàng có tên " + tenKH);
+            	return;
+            }
             listHD.add(hd);
             model.setRowCount(0);
             loadDataOnTable(listHD);

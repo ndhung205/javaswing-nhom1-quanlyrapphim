@@ -79,6 +79,8 @@ import entity.*;
 	private JButton btnTim;
 	private ArrayList<Ghe> listGheChonTam;
 	private KhachHang khachHang;
+	private Phong pPre= new Phong();
+	
 	
  	public DatVeGUI(){
 	    setLayout(new BorderLayout());
@@ -207,8 +209,12 @@ import entity.*;
 			String tenPhong = (String) cboPhong.getSelectedItem();
 			Phong p = phong.findPhongByTen(tenPhong);
 			if (p != null) {
+				if(!pPre.equals(p) || pPre != null) {
+					listGheChonTam = new ArrayList<Ghe>();
+				}
 			    ChonGheGUI guiGhe =new ChonGheGUI(p, listGheChonTam,this);
 			    guiGhe.setVisible(true);
+			    pPre = p;
 			}else {
 				JOptionPane.showMessageDialog(this, "Vui lòng chọn phòng hợp lệ!");
 			}
@@ -271,6 +277,7 @@ import entity.*;
 	    gbc.weightx = 0.8; 
 	    panel.add(valueLabel, gbc);
 	}	
+	
 	private String[] getDanhSachTenPhong() {
 		List<Phong> listP = phong.getAll();
 		String[] phongItems = new String[listP.size()+1];
@@ -371,7 +378,7 @@ import entity.*;
 	        Phong p = phong.findPhongByTen(tenPhong);
 	        LichChieu lc = lichChieu.findByPhongAndTime(p.getMaPhong(), cboLichChieu.getSelectedItem().toString()); 
 
-	        String maDatVe = datve.generateNewId();
+	        String maDatVe = "DV" + System.currentTimeMillis()%100000;
 	        DatVe datVe = new DatVe(maDatVe, "Đã xác nhận", LocalDateTime.now(), khachHang);
 	        boolean ok = datve.addDatVe(datVe);
 
@@ -380,22 +387,17 @@ import entity.*;
 	            khDAO.removeKhachHang(maKH);
 	            return;
 	        }
-	        
+	        double tongTien = 0;
 			for(Ghe g : listGheChonTam) {
 				String maVe = "V"+System.currentTimeMillis() % 100000;
 				Ve v = new Ve(maVe, g.getLoaiGhe().getTenLoaiGhe().equalsIgnoreCase("Thường")? 80000: 100000, lc, g, datVe,LocalDateTime.now());
+				tongTien += v.getGia();
 				veDAO.addVe(v);
 			}
-
-	        JOptionPane.showMessageDialog(this,
-	                "✅ Đặt vé thành công!\n"
-	                + "Khách hàng: " + tenKH
-	                + "\nSĐT: " + sdt
-	                + "\nPhim: " + tenPhim
-	                + "\nPhòng: " + tenPhong
-	                + "\nSuất chiếu: " + gioChieu
-	                + "\nGhế: " + lblListGhe.getText()
-	        );
+			
+			// thanh toan
+			ThanhToanGUI ttGUI=new ThanhToanGUI(this, khachHang, datVe, tongTien);
+			ttGUI.setVisible(true);
 	        listGheChonTam = null;
 
 	    } catch (Exception ex) {
@@ -403,7 +405,7 @@ import entity.*;
 	        JOptionPane.showMessageDialog(this, "Lỗi khi đặt vé: " + ex.getMessage());
 	    }
 	}
-	private void actionLamMoiForm() {
+	public void actionLamMoiForm() {
 		cboPhim.setSelectedIndex(0);
 		cboPhong.setSelectedIndex(0);
 		cboLichChieu.setSelectedIndex(0);
@@ -487,5 +489,6 @@ import entity.*;
 	        cboLichChieu.addItem(item);
 	    }
 	}
+	
 
 }

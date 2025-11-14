@@ -170,6 +170,47 @@ public class NhanVienDAO {
 
         return nv;
     }
+    // tim bang id
+    public NhanVien findNhanVienById(String id) {
+        String sql = "SELECT nv.maNhanVien, nv.ten, nv.soDienThoai, nv.email, nv.ngayVaoLam, " +
+                     "cv.maChucVu, cv.tenChucVu, cv.moTa " +
+                     "FROM NhanVien nv " +
+                     "LEFT JOIN ChucVu cv ON nv.maChucVu = cv.maChucVu " +
+                     "WHERE nv.maNhanVien = ?";
+        NhanVien nv = null;
+
+        try (Connection con = DatabaseConnection.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+
+            stmt.setString(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                Date sqlDate = rs.getDate("ngayVaoLam");
+                LocalDate ngay = (sqlDate != null) ? sqlDate.toLocalDate() : null;
+
+                ChucVu chucVu = new ChucVu(
+                        rs.getString("maChucVu"),
+                        rs.getString("tenChucVu"),
+                        rs.getString("moTa")
+                );
+
+                nv = new NhanVien(
+                        rs.getString("maNhanVien"),
+                        rs.getString("ten"),
+                        rs.getString("soDienThoai"),
+                        rs.getString("email"),
+                        chucVu,
+                        ngay
+                );
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return nv;
+    }
 
     // =============================
     // Kiểm tra nhân viên có tồn tại không

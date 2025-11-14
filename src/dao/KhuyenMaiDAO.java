@@ -123,4 +123,27 @@ public class KhuyenMaiDAO {
 		
 		return list;
 	}
+	 public KhuyenMai findKhuyenMaiByTen(String ten) {
+			KhuyenMai km = null;
+			String sql = "SELECT * FROM KhuyenMai WHERE tenKhuyenMai = ?";
+			
+			try {
+				 Connection con = DatabaseConnection.getInstance().getConnection();
+				 PreparedStatement stmt = con.prepareStatement(sql);
+				 stmt.setString(1, ten);
+				 ResultSet rs = stmt.executeQuery();
+				 
+				 if(rs.next()) {
+					 km = new KhuyenMai(rs.getString("maKhuyenMai"), rs.getString("tenKhuyenMai"), rs.getDouble("phanTramGiam"), 
+								rs.getDouble("soTienGiam"), rs.getDate("ngayBatDau"), rs.getDate("ngayKetThuc"), rs.getString("dieuKien"), rs.getBoolean("trangThai"));
+				
+				 }
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			
+			return km;
+		}
 }

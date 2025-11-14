@@ -420,4 +420,38 @@ public class GheDAO {
 
         return ghe;
     }
+    public ArrayList<Ghe> findGheByPhong(String maPhong) {
+        ArrayList<Ghe> list = new ArrayList<>();
+        String sql =
+            "SELECT " +
+            "g.maGhe, g.maPhong, g.maLoaiGhe, g.trangThai AS trangThaiGhe, " +
+            "p.tenPhong, p.soLuongGhe, p.trangThai AS trangThaiPhong, p.maLoaiPhong, " +
+            "lp.tenLoaiPhong, lp.moTa AS moTaLoaiPhong, " +
+            "lg.tenLoaiGhe, lg.phuThu, lg.moTa AS moTaLoaiGhe " +
+            "FROM Ghe g " +
+            "LEFT JOIN Phong p ON g.maPhong = p.maPhong " +
+            "LEFT JOIN LoaiPhong lp ON p.maLoaiPhong = lp.maLoaiPhong " +
+            "LEFT JOIN LoaiGhe lg ON g.maLoaiGhe = lg.maLoaiGhe " +
+            "WHERE g.maPhong = ? " +
+            "ORDER BY g.maGhe";
+        
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, maPhong);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Ghe ghe = createGheFromResultSet(rs);
+                    list.add(ghe);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("Lỗi khi lấy ghế theo phòng: " + e.getMessage());
+        }
+
+        return list;
+    }
+
 }

@@ -54,22 +54,6 @@ public class DatVeDAO {
 
         return n > 0;
     }
-    public String generateNewId(){
-    	int count =0 ;
-    	try {
-	        Connection con = DatabaseConnection.getInstance().getConnection();
-	        Statement st = con.createStatement();
-	        ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM DatVe");
-	        rs.next();
-	        count = rs.getInt(1) + 1;
-	        
-	        con.close();
-            DatabaseConnection.getInstance().disconnect();
-    	}catch (Exception e) {
-			e.printStackTrace();
-		}
-        return String.format("DV%5d", count);
-    }
 
     public boolean updateDatVe(DatVe dv) {
         String sql = "UPDATE DatVe SET trangThai = ? WHERE maDatVe = ?";

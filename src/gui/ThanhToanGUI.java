@@ -4,17 +4,20 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import dao.ChiTietHoaDonDAO;
 import dao.HoaDonDAO;
 import dao.KhuyenMaiDAO;
 import dao.NhanVienDAO;
 import dao.PhuongThucThanhToanDAO;
 import dao.ThueDAO;
+import entity.ChiTietHoaDon;
 import entity.DatVe;
 import entity.HoaDon;
 import entity.KhachHang;
 import entity.KhuyenMai;
 import entity.NhanVien;
 import entity.PhuongThucThanhToan;
+import entity.Ve;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
@@ -44,13 +47,15 @@ public class ThanhToanGUI extends JFrame implements ActionListener {
 	private ThueDAO thue = new ThueDAO() ;
 	private PhuongThucThanhToanDAO ptttDAO= new PhuongThucThanhToanDAO();
 	private DatVeGUI dvGUI;
+	private ArrayList<Ve> dsVe;
 
-    public ThanhToanGUI(DatVeGUI parent,KhachHang kh,DatVe dv, double tongTien) {
+    public ThanhToanGUI(DatVeGUI parent,KhachHang kh,DatVe dv, ArrayList<Ve> dsVe,double tongTien) {
         super("Thanh Toán");
         this.tongTien = tongTien;
         this.datVe =dv;
         this.khachHang = kh;
         this.dvGUI = parent;
+        this.dsVe = dsVe;
 
         initGUI();
         setLocationRelativeTo(parent);
@@ -184,8 +189,18 @@ public class ThanhToanGUI extends JFrame implements ActionListener {
     	String maHD = "HD" +System.currentTimeMillis()%100000;
     	HoaDon hd = new  HoaDon(maHD, khachHang, nv, datVe, LocalDateTime.now(), thue.getById("T01"), km, pttt, LocalDateTime.now(), "Đã thanh toán");
     	
+    	
+    	
     	if(hoaDon.addHoaDon(hd)) {
     		JOptionPane.showMessageDialog(this, "Thanh toán thành công.");
+    		for (Ve ve : dsVe) {
+    			ChiTietHoaDon ctHD = new ChiTietHoaDon(hd, ve, ve.getGia());
+    			ChiTietHoaDonDAO ctDAO = new ChiTietHoaDonDAO();
+    			
+    			if(!ctDAO.addChiTietHoaDon(ctHD)) {
+    				System.out.print("Không thêm chi tiết hóa đơn được."); return;
+    			}
+    		}
     		dvGUI.actionLamMoiForm();
     	}else {
     		System.out.println("Lỗi thanh toán.");

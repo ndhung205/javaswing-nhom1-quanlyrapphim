@@ -387,16 +387,21 @@ import entity.*;
 	            khDAO.removeKhachHang(maKH);
 	            return;
 	        }
+	        
+	        
 	        double tongTien = 0;
+	        ArrayList<Ve> dsVe = new ArrayList<Ve>();
 			for(Ghe g : listGheChonTam) {
 				String maVe = "V"+System.currentTimeMillis() % 100000;
 				Ve v = new Ve(maVe, g.getLoaiGhe().getTenLoaiGhe().equalsIgnoreCase("Thường")? 80000: 100000, lc, g, datVe,LocalDateTime.now());
 				tongTien += v.getGia();
 				veDAO.addVe(v);
+				dsVe.add(v);
 			}
 			
+			
 			// thanh toan
-			ThanhToanGUI ttGUI=new ThanhToanGUI(this, khachHang, datVe, tongTien);
+			ThanhToanGUI ttGUI=new ThanhToanGUI(this, khachHang, datVe, dsVe,tongTien);
 			ttGUI.setVisible(true);
 	        listGheChonTam = null;
 

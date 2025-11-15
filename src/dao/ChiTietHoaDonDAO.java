@@ -27,6 +27,7 @@ public class ChiTietHoaDonDAO {
             stmt.setString(1, cthd.getHoaDon().getMaHoaDon());
             stmt.setString(2, cthd.getVe().getMaVe());
             stmt.setDouble(3, cthd.getDonGia());
+            stmt.setInt(4, 1);
 
             n = stmt.executeUpdate();
 
@@ -159,7 +160,7 @@ public class ChiTietHoaDonDAO {
             stmt.setString(1, maHoaDon);
 
             ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
+            while (rs.next()) {
             	HoaDon hd = hdDAO.findHoaDonById(maHoaDon);
                 Phim phim = new Phim(rs.getString("maPhim"),rs.getString("tenPhim"),null,
                         rs.getString("moTa"),rs.getInt("thoiLuongChieu"),rs.getInt("namPhatHanh"),rs.getString("poster")

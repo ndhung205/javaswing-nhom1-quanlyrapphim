@@ -91,6 +91,7 @@ package dao;
 import java.sql.*;
 import connectDB.DatabaseConnection;
 import entity.TaiKhoan;
+import entity.ChucVu;
 import entity.NhanVien;
 
 public class TaiKhoanDAO {
@@ -99,7 +100,16 @@ public class TaiKhoanDAO {
 
     
     public TaiKhoan dangNhap(String tenTK, String matKhau) {
-        String sql = "SELECT * FROM TaiKhoan WHERE tenTaiKhoan = ? AND matKhau = ? AND trangThai = 1";
+        String sql =
+        		"""
+        		SELECT tk.maTaiKhoan, tk.tenTaiKhoan, tk.matKhau, tk.vaiTro, tk.trangThai,
+				       nv.maNhanVien, nv.ten, nv.soDienThoai, nv.email, nv.ngayVaoLam,
+				       cv.maChucVu, cv.tenChucVu, cv.moTa
+				FROM TaiKhoan tk
+				JOIN NhanVien nv ON nv.maNhanVien = tk.maNhanVien
+				JOIN ChucVu cv ON cv.maChucVu = nv.maChucVu
+        		WHERE tk.tenTaiKhoan = ? AND matKhau = ? AND trangThai = 1
+        		""";
         try (Connection con = DatabaseConnection.getInstance().getConnection();
              PreparedStatement stmt = con.prepareStatement(sql)) {
 
@@ -108,8 +118,11 @@ public class TaiKhoanDAO {
 
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-            	String MaNV = rs.getString("maNhanVien");
-                NhanVien nv = nhanVienDAO.findNhanVienById(rs.getString(MaNV));
+            	
+            	ChucVu chucVu = new ChucVu(rs.getString("maChucVu"), rs.getString("tenChucVu"), rs.getString("moTa"));
+            	
+                NhanVien nv = new NhanVien(rs.getString("maNhanVien"), rs.getString("ten"), rs.getString("soDienThoai"), rs.getString("email"), chucVu, rs.getDate("ngayVaoLam").toLocalDate());
+                
                 return new TaiKhoan(
                         rs.getString("maTaiKhoan"),
                         nv, 

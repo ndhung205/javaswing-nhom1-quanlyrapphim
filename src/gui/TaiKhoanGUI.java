@@ -7,7 +7,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import dao.TaiKhoanDAO;
 import entity.TaiKhoan;
-
+import dao.NhanVienDAO;
+import entity.NhanVien;
 public class TaiKhoanGUI extends JPanel {
 	private TaiKhoanDAO taiKhoanDAO;
 	private JTable table;
@@ -15,7 +16,7 @@ public class TaiKhoanGUI extends JPanel {
 	private JTextField txtMaTK, txtMaNV, txtTenTK, txtMatKhau, txtTimKiem;
 	private JCheckBox chkTrangThai;
 	private JButton btnThem, btnXoa, btnTaiLai, btnTim, btnSua;
-	private JComboBox<String> cboVaiTro; // ComboBox cho vai trò
+	private JComboBox<String> cboVaiTro; 
 
 	public TaiKhoanGUI() {
 		taiKhoanDAO = new TaiKhoanDAO();
@@ -186,20 +187,55 @@ public class TaiKhoanGUI extends JPanel {
 		}
 	}
 
+//	private void themTaiKhoan() {
+//		try {
+//			TaiKhoan tk = new TaiKhoan(txtMaTK.getText().trim(), txtMaNV.getText().trim(), txtTenTK.getText().trim(),
+//					txtMatKhau.getText().trim(), cboVaiTro.getSelectedItem().toString(), chkTrangThai.isSelected());
+//
+//			if (taiKhoanDAO.dangKy(tk)) {
+//				JOptionPane.showMessageDialog(this, "Thêm thành công!");
+//				loadData();
+//			} else {
+//				JOptionPane.showMessageDialog(this, "Thêm thất bại!");
+//			}
+//		} catch (Exception e) {
+//			JOptionPane.showMessageDialog(this, "Lỗi: " + e.getMessage());
+//		}
+//	}
 	private void themTaiKhoan() {
-		try {
-			TaiKhoan tk = new TaiKhoan(txtMaTK.getText().trim(), txtMaNV.getText().trim(), txtTenTK.getText().trim(),
-					txtMatKhau.getText().trim(), cboVaiTro.getSelectedItem().toString(), chkTrangThai.isSelected());
+	    try {
+	        String maTK = txtMaTK.getText().trim();
+	        String maNV = txtMaNV.getText().trim();
+	        String tenTK = txtTenTK.getText().trim();
+	        String matKhau = txtMatKhau.getText().trim();
+	        String vaiTro = cboVaiTro.getSelectedItem().toString();
+	        boolean trangThai = chkTrangThai.isSelected();
 
-			if (taiKhoanDAO.dangKy(tk)) {
-				JOptionPane.showMessageDialog(this, "Thêm thành công!");
-				loadData();
-			} else {
-				JOptionPane.showMessageDialog(this, "Thêm thất bại!");
-			}
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(this, "Lỗi: " + e.getMessage());
-		}
+	        
+	        if (maTK.isEmpty() || maNV.isEmpty() || tenTK.isEmpty() || matKhau.isEmpty()) {
+	            JOptionPane.showMessageDialog(this, "Không được bỏ trống dữ liệu!");
+	            return;
+	        }
+
+	        NhanVienDAO nvDao = new NhanVienDAO();
+	        NhanVien nv = nvDao.findNhanVienById(maNV);
+	        if (nv == null) {
+	            JOptionPane.showMessageDialog(this, "Mã nhân viên không tồn tại!");
+	            return;
+	        }
+
+	        TaiKhoan tk = new TaiKhoan(maTK, nv, tenTK, matKhau, vaiTro, trangThai);
+
+	        if (taiKhoanDAO.dangKy(tk)) {
+	            JOptionPane.showMessageDialog(this, "Thêm thành công!");
+	            loadData();
+	            clearForm();
+	        } else {
+	            JOptionPane.showMessageDialog(this, "Thêm thất bại!");
+	        }
+	    } catch (Exception e) {
+	        JOptionPane.showMessageDialog(this, "Lỗi: " + e.getMessage());
+	    }
 	}
 
 	private void xoaTaiKhoan() {
@@ -225,26 +261,67 @@ public class TaiKhoanGUI extends JPanel {
 		}
 	}
 
+//	private void suaTaiKhoan() {
+//		int row = table.getSelectedRow();
+//		if (row == -1) {
+//			JOptionPane.showMessageDialog(this, "Vui lòng chọn tài khoản cần sửa!");
+//			return;
+//		}
+//
+//		try {
+//			TaiKhoan tk = new TaiKhoan(txtMaTK.getText().trim(), txtMaNV.getText().trim(), txtTenTK.getText().trim(),
+//					txtMatKhau.getText().trim(), cboVaiTro.getSelectedItem().toString(), chkTrangThai.isSelected());
+//
+//			if (taiKhoanDAO.capNhatTaiKhoan(tk)) {
+//				JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
+//				loadData();
+//			} else {
+//				JOptionPane.showMessageDialog(this, "Cập nhật thất bại!");
+//			}
+//		} catch (Exception e) {
+//			JOptionPane.showMessageDialog(this, "Lỗi: " + e.getMessage());
+//		}
+//	}
 	private void suaTaiKhoan() {
-		int row = table.getSelectedRow();
-		if (row == -1) {
-			JOptionPane.showMessageDialog(this, "Vui lòng chọn tài khoản cần sửa!");
-			return;
-		}
+	    int row = table.getSelectedRow();
+	    if (row == -1) {
+	        JOptionPane.showMessageDialog(this, "Vui lòng chọn tài khoản");
+	        return;
+	    }
 
-		try {
-			TaiKhoan tk = new TaiKhoan(txtMaTK.getText().trim(), txtMaNV.getText().trim(), txtTenTK.getText().trim(),
-					txtMatKhau.getText().trim(), cboVaiTro.getSelectedItem().toString(), chkTrangThai.isSelected());
+	    try {
+	        String maTK = txtMaTK.getText().trim();
+	        String maNV = txtMaNV.getText().trim();
+	        String tenTK = txtTenTK.getText().trim();
+	        String matKhau = txtMatKhau.getText().trim();
+	        String vaiTro = cboVaiTro.getSelectedItem().toString();
+	        boolean trangThai = chkTrangThai.isSelected();
 
-			if (taiKhoanDAO.capNhatTaiKhoan(tk)) {
-				JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
-				loadData();
-			} else {
-				JOptionPane.showMessageDialog(this, "Cập nhật thất bại!");
-			}
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(this, "Lỗi: " + e.getMessage());
-		}
+	        if (maTK.isEmpty() || maNV.isEmpty() || tenTK.isEmpty() || matKhau.isEmpty()) {
+	            JOptionPane.showMessageDialog(this, "Không được bỏ trống ");
+	            return;
+	        }
+
+	        NhanVienDAO nvDAO = new NhanVienDAO();
+	        NhanVien nv = nvDAO.findNhanVienById(maNV);
+	        
+	        if (nv == null) {
+	            JOptionPane.showMessageDialog(this, "Mã nhân viên không tồn tại");
+	            return;
+	        }
+
+	        
+	        TaiKhoan tk = new TaiKhoan(maTK, nv, tenTK, matKhau, vaiTro, trangThai);
+
+	        if (taiKhoanDAO.capNhatTaiKhoan(tk)) {
+	            JOptionPane.showMessageDialog(this, "Cập nhật thành công");
+	            loadData();
+	        } else {
+	            JOptionPane.showMessageDialog(this, "Cập nhật thất bại");
+	        }
+	    } catch (Exception e) {
+	        JOptionPane.showMessageDialog(this, "Lỗi" + e.getMessage());
+	    }
 	}
 
 	private void timTaiKhoan() {
@@ -274,7 +351,7 @@ public class TaiKhoanGUI extends JPanel {
 		txtMaNV.setText("");
 		txtTenTK.setText("");
 		txtMatKhau.setText("");
-		cboVaiTro.setSelectedIndex(0); // chọn lại mục đầu tiên
+		cboVaiTro.setSelectedIndex(0); 
 		chkTrangThai.setSelected(false);
 	}
 

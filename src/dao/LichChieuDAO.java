@@ -127,48 +127,42 @@ public class LichChieuDAO {
      * @param excludeMaLichChieu Mã lịch chiếu bỏ qua (dùng khi update)
      * @return true nếu bị trùng
      */
-    public boolean checkTrungLich(LichChieu lichChieu, String excludeMaLichChieu) {
-        String sql = "SELECT COUNT(*) FROM LichChieu " +
-                     "WHERE maPhong = ? AND ngayChieu = ? " +
-                     "AND maLichChieu != ? " +
-                     "AND (" +
-                     "  (gioBatDau < ? AND gioKetThuc > ?) OR " + // Lịch cũ bao lịch mới
-                     "  (gioBatDau < ? AND gioKetThuc > ?) OR " + // Lịch mới bao lịch cũ
-                     "  (gioBatDau >= ? AND gioBatDau < ?) OR " + // Bắt đầu trong khoảng
-                     "  (gioKetThuc > ? AND gioKetThuc <= ?)" +   // Kết thúc trong khoảng
-                     ")";
-        
+    public boolean checkTrungLich(LichChieu lc, String excludeId) {
+        String sql = """
+            SELECT COUNT(*)
+            FROM LichChieu
+            WHERE maPhong = ?
+              AND ngayChieu = ?
+              AND (? IS NULL OR maLichChieu <> ?)
+              AND (
+                    (gioBatDau < ? AND gioKetThuc > ?)
+                  )
+        """;
+
         try (Connection conn = DatabaseConnection.getInstance().getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
-            String excludeId = (excludeMaLichChieu != null) ? excludeMaLichChieu : "";
-            Timestamp gioBatDau = Timestamp.valueOf(lichChieu.getGioBatDau());
-            Timestamp gioKetThuc = Timestamp.valueOf(lichChieu.getGioKetThuc());
-            
-            stmt.setString(1, lichChieu.getPhong().getMaPhong());
-            stmt.setDate(2, Date.valueOf(lichChieu.getNgayChieu()));
-            stmt.setString(3, excludeId);
-            stmt.setTimestamp(4, gioKetThuc);
-            stmt.setTimestamp(5, gioBatDau);
-            stmt.setTimestamp(6, gioKetThuc);
-            stmt.setTimestamp(7, gioBatDau);
-            stmt.setTimestamp(8, gioBatDau);
-            stmt.setTimestamp(9, gioKetThuc);
-            stmt.setTimestamp(10, gioBatDau);
-            stmt.setTimestamp(11, gioKetThuc);
-            
+
+            Timestamp startNew = Timestamp.valueOf(lc.getGioBatDau());
+            Timestamp endNew   = Timestamp.valueOf(lc.getGioKetThuc());
+
+            stmt.setString(1, lc.getPhong().getMaPhong());
+            stmt.setDate(2, Date.valueOf(lc.getNgayChieu()));
+            stmt.setString(3, excludeId);  // cho update
+            stmt.setString(4, excludeId);
+
+            // kiểm tra giao nhau: startOld < endNew AND endOld > startNew
+            stmt.setTimestamp(5, endNew);
+            stmt.setTimestamp(6, startNew);
+
             ResultSet rs = stmt.executeQuery();
-            
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
-            }
-            
-        } catch (SQLException e) {
+            if (rs.next()) return rs.getInt(1) > 0;
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        
         return false;
     }
+
     
     /**
      * Kiểm tra mã lịch chiếu đã tồn tại chưa
@@ -384,34 +378,6 @@ public class LichChieuDAO {
 
         return list;
     }
-
-    
-    /**
-     * Lấy lịch chiếu theo phim
-     * @param maPhim
-     * @return List<LichChieu>
-     */
-    public List<LichChieu> getByPhim(String maPhim) {
-        List<LichChieu> list = new ArrayList<>();
-        String sql = "SELECT * FROM LichChieu WHERE maPhim = ? ORDER BY ngayChieu DESC, gioBatDau DESC";
-        
-        try (Connection conn = DatabaseConnection.getInstance().getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
-            stmt.setString(1, maPhim);
-            ResultSet rs = stmt.executeQuery();
-            
-            while (rs.next()) {
-                LichChieu lc = createLichChieuFromResultSet(rs);
-                if (lc != null) list.add(lc);
-            }
-            
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        
-        return list;
-    }
     
     /**
      * Lấy lịch chiếu theo phòng
@@ -420,7 +386,16 @@ public class LichChieuDAO {
      */
     public List<LichChieu> getByPhong(String maPhong) {
         List<LichChieu> list = new ArrayList<>();
-        String sql = "SELECT * FROM LichChieu WHERE maPhong = ? ORDER BY ngayChieu DESC, gioBatDau DESC";
+        String sql = """
+        		SELECT lc.*, p.tenPhim, p.moTa, p.thoiLuongChieu, p.namPhatHanh, p.poster,
+				       ph.tenPhong, ph.soLuongGhe, ph.trangThai
+				FROM LichChieu lc
+				JOIN Phim p ON p.maPhim = lc.maPhim
+				JOIN Phong ph ON ph.maPhong = lc.maPhong
+				WHERE lc.maPong = ?
+				ORDER BY lc.ngayChieu DESC, lc.gioBatDau DESC
+
+        		""";
         
         try (Connection conn = DatabaseConnection.getInstance().getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
